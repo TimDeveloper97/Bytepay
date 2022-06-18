@@ -34,7 +34,7 @@ namespace ABytepay.Controllers
             password.Clear();
             password.SendKeys(_password);
 
-            Task.Delay(100);
+            _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(100);
             var login = _web.FindElement(By.XPath("//button[@type='submit'][text()='Đăng nhập']"));
             login.Click();
         }

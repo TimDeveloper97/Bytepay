@@ -1,5 +1,6 @@
 ﻿using ABytepay.Controllers;
 using ABytepay.Domain;
+using ABytepay.Helpers;
 using ABytepay.Models;
 using OpenQA.Selenium;
 using System;
@@ -34,20 +35,28 @@ namespace ABytepay
             @products = new List<Product>();
             @base.InitEdge();
             @web = @base.GetEdge();
+
             nAmount.Value = 1;
+            tbnRandom_Click(null, null);
 
             lvItems.Columns.Add("Index");
             lvItems.Columns.Add("Name", 210);
             lvItems.Columns.Add("Amount");
+
+
             MockData();
         }
 
         void MockData()
         {
             int index = 0;
-            @products.Add(new Product { Amount = "1", Name = "Bia tiger lon thùng 24" });
-            @products.Add(new Product { Amount = "1", Name = "1 thùng nước Sting lon" });
-            @products.Add(new Product { Amount = "1", Name = "Sữa rữa mặt cho da khô Beaty Med" });
+            
+            tbUsername.Text = "db05111997@gmail.com";
+            tbPassword.Text = "123456789";
+
+            @products.Add(new Product { Amount = "2", Name = "Bia tiger lon thùng 24" });
+            @products.Add(new Product { Amount = "2", Name = "1 thùng nước Sting lon" });
+            @products.Add(new Product { Amount = "2", Name = "Sữa rữa mặt cho da khô Beaty Med" });
 
             foreach (var item in @products)
             {
@@ -69,14 +78,41 @@ namespace ABytepay
             new LoginController(
                 @web,
                 "https://bytepay.vn/login",
-                "db05111997@gmail.com",
-                "123456789").Execute();
+                tbUsername.Text,
+                tbPassword.Text).Execute();
         }
         private void btnTransaction_Click(object sender, EventArgs e)
         {
             new TransactionController(
                 @web,
-                @products).Execute();
+                @products, 
+                new Receiver 
+                {
+                    Name = tbName.Text, 
+                    Address = tbAddress.Text,
+                    Email = tbEmail.Text,
+                    Phone = tbPhone.Text
+                }).Execute();
+        }
+
+        private void btnPayment_Click(object sender, EventArgs e)
+        {
+            new PaymentController(
+                @web,
+                Clipboard.GetText()).Execute();
+        }
+
+        private void btnAuto_Click(object sender, EventArgs e)
+        {
+            btnLogin_Click(null, null);
+            @web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
+            btnTransaction_Click(null, null);
+            btnPayment_Click(null, null);
+        }
+
+        private void cbRepeat_CheckedChanged(object sender, EventArgs e)
+        {
+            
         }
         #endregion
 
@@ -123,8 +159,14 @@ namespace ABytepay
             lvItems.Items.RemoveAt(lvItems.SelectedItems[0].Index);
         }
 
+        private void tbnRandom_Click(object sender, EventArgs e)
+        {
+            tbAddress.Text = RandomHelper.GetAddress();
+            tbName.Text = RandomHelper.GetName();
+            tbEmail.Text = RandomHelper.GetEmail(tbName.Text);
+            tbPhone.Text = RandomHelper.GetPhone();
+        }
+
         #endregion
-
-
     }
 }
