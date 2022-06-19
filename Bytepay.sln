@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31605.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bytepay", "Bytepay\Bytepay.csproj", "{3C040039-B789-4061-94FA-24424A226E11}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABytepay", "ABytepay\ABytepay.csproj", "{91F108B3-6FA0-4F5E-BA3F-E2BA29C34AF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LicenseKey", "LicenseKey\LicenseKey.csproj", "{F70437B6-7490-49A2-806C-64DFB7D3CCEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3C040039-B789-4061-94FA-24424A226E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3C040039-B789-4061-94FA-24424A226E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C040039-B789-4061-94FA-24424A226E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3C040039-B789-4061-94FA-24424A226E11}.Release|Any CPU.Build.0 = Release|Any CPU
 		{91F108B3-6FA0-4F5E-BA3F-E2BA29C34AF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{91F108B3-6FA0-4F5E-BA3F-E2BA29C34AF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91F108B3-6FA0-4F5E-BA3F-E2BA29C34AF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91F108B3-6FA0-4F5E-BA3F-E2BA29C34AF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F70437B6-7490-49A2-806C-64DFB7D3CCEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F70437B6-7490-49A2-806C-64DFB7D3CCEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F70437B6-7490-49A2-806C-64DFB7D3CCEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F70437B6-7490-49A2-806C-64DFB7D3CCEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

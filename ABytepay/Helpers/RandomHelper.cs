@@ -9,10 +9,10 @@ namespace ABytepay.Helpers
     public class RandomHelper
     {
         static string[] surnames = { "Dinh", "Nguyen", "Bao", "Vo", "Vu", "Nhat", "Tran", "Le", "Thai", "Pham",
-                                "Phan", "Đang", "Quoc", "Do", "Ho", "Ngo", "Duong", "Ly", "Truong", "Bui", "Duong",
+                                "Phan", "Dang", "Quoc", "Do", "Ho", "Ngo", "Duong", "Ly", "Truong", "Bui", "Duong",
                                 "Loc"};
 
-        static string[] cushions = { "Thi", "Duy", "Van", "Thai", "Tat", "Đuc", "Hong", "Viet" };
+        static string[] cushions = { "Thi", "Duy", "Van", "Thai", "Tat", "Duc", "Hong", "Viet" };
         static string[] names = { "Anh", "Thuy", "Binh", "Bao", "Van", "Quyen", "Duc", "Vuong", "Tuan", "Minh",
                                 "Thai", "Hieu", "Duy", "Tung", "Lieu", "Bao", "Hoang", "Bau", "Dung", "Hai Anh",
                                 "Son", "Nguyen", "Thinh", "Manh", "Dinh", "Dung", "Hoa", "Huan", "Tuyen", "Quang",

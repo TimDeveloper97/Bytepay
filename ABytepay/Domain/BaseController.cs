@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ABytepay.Domain
 {
@@ -21,45 +22,155 @@ namespace ABytepay.Domain
 
         public void InitEdge()
         {
-            EdgeDriverService service = EdgeDriverService.CreateDefaultService(path + @"\Drivers\", "msedgedriver.exe");
-            service.HideCommandPromptWindow = true;
+            try
+            {
+                EdgeDriverService service = EdgeDriverService.CreateDefaultService(path + @"\Drivers\", "msedgedriver.exe");
+                service.HideCommandPromptWindow = true;
 
-            if (_edgeDriver == null)
-                _edgeDriver = new EdgeDriver(service);
+                if (_edgeDriver == null)
+                    _edgeDriver = new EdgeDriver(service);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Can't start edge ide", "Error");
+            }
         }
 
         public void InitFirefox()
         {
-            FirefoxDriverService service = FirefoxDriverService.CreateDefaultService(path + @"\Drivers\", "geckodriver.exe");
-            service.HideCommandPromptWindow = true;
+            try
+            {
+                FirefoxDriverService service = FirefoxDriverService.CreateDefaultService(path + @"\Drivers\", "geckodriver.exe");
+                service.HideCommandPromptWindow = true;
 
-            if (_firefoxDriver == null)
-                _firefoxDriver = new FirefoxDriver(service);
+                if (_firefoxDriver == null)
+                    _firefoxDriver = new FirefoxDriver(service);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Can't start firefox ide", "Error");
+            }
 
         }
 
         public void InitChrome()
         {
-            ChromeDriverService service = ChromeDriverService.CreateDefaultService(path + @"\Drivers\", "chromedriver.exe");
-            service.HideCommandPromptWindow = true;
+            try
+            {
+                ChromeDriverService service = ChromeDriverService.CreateDefaultService(path + @"\Drivers\", "chromedriver.exe");
+                service.HideCommandPromptWindow = true;
 
-            if (_chromeDriver == null)
-                _chromeDriver = new ChromeDriver(service);
+                if (_chromeDriver == null)
+                    _chromeDriver = new ChromeDriver(service);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Can't start chrome ide", "Error");
+            }
         }
 
         public void CloseChrome()
         {
-            _chromeDriver.Close();
+            _chromeDriver?.Close();
         }
 
         public void CloseFirefox()
         {
-            _firefoxDriver.Close();
+            _firefoxDriver?.Close();
         }
 
         public void CloseEdge()
         {
-            _edgeDriver.Close();
+            _edgeDriver?.Close();
+        }
+
+        public IWebDriver GetFirefox() => _firefoxDriver;
+
+        public IWebDriver GetChrome() => _chromeDriver;
+
+        public IWebDriver GetEdge() => _edgeDriver;
+    }
+
+    public class BaseIgnoreController : IBaseController
+    {
+        readonly string path = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+
+        public static ChromeDriver _chromeDriver;
+        public static FirefoxDriver _firefoxDriver;
+        public static EdgeDriver _edgeDriver;
+
+        [Obsolete]
+        public void InitEdge()
+        {
+            try
+            {
+                EdgeOptions options = new EdgeOptions();
+                options.AddArgument("inprivate");
+
+                EdgeDriverService service = EdgeDriverService.CreateDefaultService(path + @"\Drivers\", "msedgedriver.exe");
+                service.HideCommandPromptWindow = true;
+
+                if (_edgeDriver == null)
+                    _edgeDriver = new EdgeDriver(service, options);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Can't start edge ide", "Error");
+            }
+        }
+
+        public void InitFirefox()
+        {
+            try
+            {
+                FirefoxOptions options = new FirefoxOptions();
+                options.AddArgument("-private");
+
+                FirefoxDriverService service = FirefoxDriverService.CreateDefaultService(path + @"\Drivers\", "geckodriver.exe");
+                service.HideCommandPromptWindow = true;
+
+                if (_firefoxDriver == null)
+                    _firefoxDriver = new FirefoxDriver(service, options);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Can't start firefox ide", "Error");
+            }
+
+        }
+
+        public void InitChrome()
+        {
+            try
+            {
+                ChromeOptions options = new ChromeOptions();
+                options.AddArgument("incognito");
+
+                ChromeDriverService service = ChromeDriverService.CreateDefaultService(path + @"\Drivers\", "chromedriver.exe");
+                service.HideCommandPromptWindow = true;
+
+                if (_chromeDriver == null)
+                    _chromeDriver = new ChromeDriver(service, options);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Can't start chrome ide", "Error");
+            }
+        }
+
+        public void CloseChrome()
+        {
+            _chromeDriver?.Close();
+        }
+
+        public void CloseFirefox()
+        {
+            _firefoxDriver?.Close();
+        }
+
+        public void CloseEdge()
+        {
+            _edgeDriver?.Close();
         }
 
         public IWebDriver GetFirefox() => _firefoxDriver;

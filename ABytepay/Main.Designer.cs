@@ -29,14 +29,12 @@ namespace ABytepay
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
             this.tbPassword = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tbUsername = new System.Windows.Forms.TextBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnTransaction = new System.Windows.Forms.Button();
-            this.btnLogin = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.rEdge = new System.Windows.Forms.RadioButton();
             this.rFirefox = new System.Windows.Forms.RadioButton();
@@ -49,21 +47,21 @@ namespace ABytepay
             this.btnAdd = new System.Windows.Forms.Button();
             this.tbItem = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.tbName = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.tbPhone = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.tbAddress = new System.Windows.Forms.TextBox();
+            this.tbnRandom = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.tbEmail = new System.Windows.Forms.TextBox();
-            this.tbnRandom = new System.Windows.Forms.Button();
-            this.btnPayment = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.tbAddress = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.tbPhone = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tbName = new System.Windows.Forms.TextBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.btnAuto = new System.Windows.Forms.Button();
+            this.btnStop = new System.Windows.Forms.Button();
             this.cbRepeat = new System.Windows.Forms.CheckBox();
+            this.btnAuto = new System.Windows.Forms.Button();
+            this.rInternet = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nAmount)).BeginInit();
@@ -115,39 +113,7 @@ namespace ABytepay
             this.tbUsername.Location = new System.Drawing.Point(67, 19);
             this.tbUsername.Name = "tbUsername";
             this.tbUsername.Size = new System.Drawing.Size(131, 20);
-            this.tbUsername.TabIndex = 0;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.btnPayment);
-            this.groupBox2.Controls.Add(this.btnTransaction);
-            this.groupBox2.Controls.Add(this.btnLogin);
-            this.groupBox2.Location = new System.Drawing.Point(12, 304);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(329, 60);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Actions";
-            // 
-            // btnTransaction
-            // 
-            this.btnTransaction.Location = new System.Drawing.Point(114, 19);
-            this.btnTransaction.Name = "btnTransaction";
-            this.btnTransaction.Size = new System.Drawing.Size(97, 32);
-            this.btnTransaction.TabIndex = 1;
-            this.btnTransaction.Text = "[2] Transaction";
-            this.btnTransaction.UseVisualStyleBackColor = true;
-            this.btnTransaction.Click += new System.EventHandler(this.btnTransaction_Click);
-            // 
-            // btnLogin
-            // 
-            this.btnLogin.Location = new System.Drawing.Point(9, 19);
-            this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(75, 32);
-            this.btnLogin.TabIndex = 0;
-            this.btnLogin.Text = "[1] Login";
-            this.btnLogin.UseVisualStyleBackColor = true;
-            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
+            this.tbUsername.TabIndex = 2;
             // 
             // groupBox3
             // 
@@ -206,7 +172,7 @@ namespace ABytepay
             this.groupBox4.Controls.Add(this.tbItem);
             this.groupBox4.Location = new System.Drawing.Point(222, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(346, 286);
+            this.groupBox4.Size = new System.Drawing.Size(346, 215);
             this.groupBox4.TabIndex = 3;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Items";
@@ -216,7 +182,7 @@ namespace ABytepay
             this.nAmount.Location = new System.Drawing.Point(227, 15);
             this.nAmount.Name = "nAmount";
             this.nAmount.Size = new System.Drawing.Size(32, 20);
-            this.nAmount.TabIndex = 6;
+            this.nAmount.TabIndex = 1;
             // 
             // label4
             // 
@@ -243,7 +209,7 @@ namespace ABytepay
             this.lvItems.Location = new System.Drawing.Point(6, 49);
             this.lvItems.MultiSelect = false;
             this.lvItems.Name = "lvItems";
-            this.lvItems.Size = new System.Drawing.Size(334, 222);
+            this.lvItems.Size = new System.Drawing.Size(334, 160);
             this.lvItems.TabIndex = 2;
             this.lvItems.UseCompatibleStateImageBehavior = false;
             this.lvItems.View = System.Windows.Forms.View.Details;
@@ -279,42 +245,36 @@ namespace ABytepay
             this.groupBox5.Controls.Add(this.tbName);
             this.groupBox5.Location = new System.Drawing.Point(12, 144);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(204, 154);
+            this.groupBox5.Size = new System.Drawing.Size(204, 150);
             this.groupBox5.TabIndex = 4;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Receiver";
             // 
-            // tbName
+            // tbnRandom
             // 
-            this.tbName.Location = new System.Drawing.Point(67, 41);
-            this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(131, 20);
-            this.tbName.TabIndex = 1;
+            this.tbnRandom.Location = new System.Drawing.Point(123, 12);
+            this.tbnRandom.Name = "tbnRandom";
+            this.tbnRandom.Size = new System.Drawing.Size(75, 23);
+            this.tbnRandom.TabIndex = 10;
+            this.tbnRandom.Text = "Random";
+            this.tbnRandom.UseVisualStyleBackColor = true;
+            this.tbnRandom.Click += new System.EventHandler(this.tbnRandom_Click);
             // 
-            // label5
+            // label8
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 44);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(38, 13);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "Name:";
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 122);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(35, 13);
+            this.label8.TabIndex = 9;
+            this.label8.Text = "Email:";
             // 
-            // label6
+            // tbEmail
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 70);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(41, 13);
-            this.label6.TabIndex = 5;
-            this.label6.Text = "Phone:";
-            // 
-            // tbPhone
-            // 
-            this.tbPhone.Location = new System.Drawing.Point(67, 67);
-            this.tbPhone.Name = "tbPhone";
-            this.tbPhone.Size = new System.Drawing.Size(131, 20);
-            this.tbPhone.TabIndex = 4;
+            this.tbEmail.Location = new System.Drawing.Point(67, 119);
+            this.tbEmail.Name = "tbEmail";
+            this.tbEmail.Size = new System.Drawing.Size(131, 20);
+            this.tbEmail.TabIndex = 7;
             // 
             // label7
             // 
@@ -332,93 +292,116 @@ namespace ABytepay
             this.tbAddress.Size = new System.Drawing.Size(131, 20);
             this.tbAddress.TabIndex = 6;
             // 
-            // label8
+            // label6
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 122);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(35, 13);
-            this.label8.TabIndex = 9;
-            this.label8.Text = "Email:";
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 70);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(41, 13);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "Phone:";
             // 
-            // tbEmail
+            // tbPhone
             // 
-            this.tbEmail.Location = new System.Drawing.Point(67, 119);
-            this.tbEmail.Name = "tbEmail";
-            this.tbEmail.Size = new System.Drawing.Size(131, 20);
-            this.tbEmail.TabIndex = 8;
+            this.tbPhone.Location = new System.Drawing.Point(67, 67);
+            this.tbPhone.Name = "tbPhone";
+            this.tbPhone.Size = new System.Drawing.Size(131, 20);
+            this.tbPhone.TabIndex = 5;
             // 
-            // tbnRandom
+            // label5
             // 
-            this.tbnRandom.Location = new System.Drawing.Point(123, 12);
-            this.tbnRandom.Name = "tbnRandom";
-            this.tbnRandom.Size = new System.Drawing.Size(75, 23);
-            this.tbnRandom.TabIndex = 10;
-            this.tbnRandom.Text = "Random";
-            this.tbnRandom.UseVisualStyleBackColor = true;
-            this.tbnRandom.Click += new System.EventHandler(this.tbnRandom_Click);
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 44);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(38, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Name:";
             // 
-            // btnPayment
+            // tbName
             // 
-            this.btnPayment.Location = new System.Drawing.Point(238, 19);
-            this.btnPayment.Name = "btnPayment";
-            this.btnPayment.Size = new System.Drawing.Size(85, 32);
-            this.btnPayment.TabIndex = 2;
-            this.btnPayment.Text = "[3] Payment";
-            this.btnPayment.UseVisualStyleBackColor = true;
-            this.btnPayment.Click += new System.EventHandler(this.btnPayment_Click);
+            this.tbName.Location = new System.Drawing.Point(67, 41);
+            this.tbName.Name = "tbName";
+            this.tbName.Size = new System.Drawing.Size(131, 20);
+            this.tbName.TabIndex = 4;
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.btnStop);
             this.groupBox6.Controls.Add(this.cbRepeat);
             this.groupBox6.Controls.Add(this.btnAuto);
-            this.groupBox6.Location = new System.Drawing.Point(347, 304);
+            this.groupBox6.Location = new System.Drawing.Point(222, 234);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(221, 60);
+            this.groupBox6.Size = new System.Drawing.Size(346, 60);
             this.groupBox6.TabIndex = 5;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Auto";
             // 
-            // btnAuto
+            // btnStop
             // 
-            this.btnAuto.Location = new System.Drawing.Point(102, 19);
-            this.btnAuto.Name = "btnAuto";
-            this.btnAuto.Size = new System.Drawing.Size(113, 32);
-            this.btnAuto.TabIndex = 1;
-            this.btnAuto.Text = "Automation";
-            this.btnAuto.UseVisualStyleBackColor = true;
-            this.btnAuto.Click += new System.EventHandler(this.btnAuto_Click);
+            this.btnStop.Location = new System.Drawing.Point(258, 19);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(82, 32);
+            this.btnStop.TabIndex = 3;
+            this.btnStop.Tag = "false";
+            this.btnStop.Text = "[End] Stop";
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // cbRepeat
             // 
             this.cbRepeat.AutoSize = true;
-            this.cbRepeat.Location = new System.Drawing.Point(19, 28);
+            this.cbRepeat.Location = new System.Drawing.Point(21, 28);
             this.cbRepeat.Name = "cbRepeat";
-            this.cbRepeat.Size = new System.Drawing.Size(61, 17);
-            this.cbRepeat.TabIndex = 2;
-            this.cbRepeat.Text = "Repeat";
+            this.cbRepeat.Size = new System.Drawing.Size(92, 17);
+            this.cbRepeat.TabIndex = 8;
+            this.cbRepeat.Text = "Incognito Tab";
             this.cbRepeat.UseVisualStyleBackColor = true;
-            this.cbRepeat.CheckedChanged += new System.EventHandler(this.cbRepeat_CheckedChanged);
+            // 
+            // btnAuto
+            // 
+            this.btnAuto.Location = new System.Drawing.Point(157, 19);
+            this.btnAuto.Name = "btnAuto";
+            this.btnAuto.Size = new System.Drawing.Size(82, 32);
+            this.btnAuto.TabIndex = 1;
+            this.btnAuto.Tag = "false";
+            this.btnAuto.Text = "[Start] Auto";
+            this.btnAuto.UseVisualStyleBackColor = true;
+            this.btnAuto.Click += new System.EventHandler(this.btnAuto_Click);
+            // 
+            // rInternet
+            // 
+            this.rInternet.AutoSize = true;
+            this.rInternet.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.rInternet.Checked = true;
+            this.rInternet.ForeColor = System.Drawing.Color.Black;
+            this.rInternet.Location = new System.Drawing.Point(12, 300);
+            this.rInternet.Name = "rInternet";
+            this.rInternet.Size = new System.Drawing.Size(85, 17);
+            this.rInternet.TabIndex = 6;
+            this.rInternet.TabStop = true;
+            this.rInternet.Text = "radioButton1";
+            this.rInternet.UseVisualStyleBackColor = false;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(580, 376);
+            this.ClientSize = new System.Drawing.Size(580, 325);
+            this.Controls.Add(this.rInternet);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Main";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ABytepay";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
@@ -429,6 +412,7 @@ namespace ABytepay
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -439,8 +423,6 @@ namespace ABytepay
         private System.Windows.Forms.TextBox tbPassword;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbUsername;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RadioButton rEdge;
         private System.Windows.Forms.RadioButton rFirefox;
@@ -452,7 +434,6 @@ namespace ABytepay
         private System.Windows.Forms.ListView lvItems;
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.TextBox tbItem;
-        private System.Windows.Forms.Button btnTransaction;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Button tbnRandom;
         private System.Windows.Forms.Label label8;
@@ -463,10 +444,11 @@ namespace ABytepay
         private System.Windows.Forms.TextBox tbPhone;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox tbName;
-        private System.Windows.Forms.Button btnPayment;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Button btnAuto;
         private System.Windows.Forms.CheckBox cbRepeat;
+        private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.RadioButton rInternet;
     }
 }
 
