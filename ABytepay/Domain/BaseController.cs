@@ -14,7 +14,7 @@ namespace ABytepay.Domain
 {
     public class BaseController : IBaseController
     {
-        readonly string path = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+        string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)?.Replace("file:\\", "");
 
         public static ChromeDriver _chromeDriver;
         public static FirefoxDriver _firefoxDriver;
@@ -30,9 +30,9 @@ namespace ABytepay.Domain
                 if (_edgeDriver == null)
                     _edgeDriver = new EdgeDriver(service);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Can't start edge ide", "Error");
+                MessageBox.Show(ex.Message, "Error");
             }
         }
 
@@ -46,9 +46,9 @@ namespace ABytepay.Domain
                 if (_firefoxDriver == null)
                     _firefoxDriver = new FirefoxDriver(service);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Can't start firefox ide", "Error");
+                MessageBox.Show(ex.Message, "Error");
             }
 
         }
@@ -63,9 +63,9 @@ namespace ABytepay.Domain
                 if (_chromeDriver == null)
                     _chromeDriver = new ChromeDriver(service);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Can't start chrome ide", "Error");
+                MessageBox.Show(ex.Message, "Error");
             }
         }
 
@@ -93,7 +93,7 @@ namespace ABytepay.Domain
 
     public class BaseIgnoreController : IBaseController
     {
-        readonly string path = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+        string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)?.Replace("file:\\", "");
 
         public static ChromeDriver _chromeDriver;
         public static FirefoxDriver _firefoxDriver;
@@ -115,7 +115,7 @@ namespace ABytepay.Domain
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can't start edge ide", "Error");
+                MessageBox.Show(ex.Message, "Error");
             }
         }
 
@@ -132,9 +132,9 @@ namespace ABytepay.Domain
                 if (_firefoxDriver == null)
                     _firefoxDriver = new FirefoxDriver(service, options);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Can't start firefox ide", "Error");
+                MessageBox.Show(ex.Message, "Error");
             }
 
         }
@@ -152,9 +152,9 @@ namespace ABytepay.Domain
                 if (_chromeDriver == null)
                     _chromeDriver = new ChromeDriver(service, options);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Can't start chrome ide", "Error");
+                MessageBox.Show(ex.Message, "Error");
             }
         }
 

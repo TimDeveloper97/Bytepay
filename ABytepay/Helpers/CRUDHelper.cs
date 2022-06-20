@@ -12,7 +12,7 @@ namespace ABytepay.Helpers
 {
     public class CRUDHelper
     {
-        readonly static string path = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+        static string path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)?.Replace("file:\\", "");
         static string pfile = path + @"\Drivers\" + "data.json";
         static string pdirec = path + @"\Drivers\";
 

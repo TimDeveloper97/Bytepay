@@ -158,6 +158,12 @@ namespace ABytepay.Controllers
                 //wait
                 _web.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div/p"), 15);
 
+                if (_isIgnore)
+                {
+                    _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
+                    Thread.Sleep(2000);
+                }
+
                 var link = _web.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div/p"));
                 link.Click();
             }

@@ -294,6 +294,8 @@ namespace ABytepay
                     @web.Close();
                 }
 
+                @web = @web?.SwitchTo().Window(@web?.WindowHandles.First());
+
                 if (cbRepeat.CheckState == CheckState.Checked)
                 {
                     for (int i = webIgnore.WindowHandles.Count - 1; i > 0; i--)
@@ -302,6 +304,7 @@ namespace ABytepay
                         webIgnore.Close();
                     }
                 }
+                webIgnore = webIgnore?.SwitchTo().Window(webIgnore?.WindowHandles.First());
             }
             catch (Exception)
             {
