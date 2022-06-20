@@ -209,6 +209,7 @@
     <Compile Include="Domain\BaseFirebase.cs" />
     <Compile Include="Domain\IBaseController.cs" />
     <Compile Include="Helpers\ComputerHelper.cs" />
+    <Compile Include="Helpers\CRUDHelper.cs" />
     <Compile Include="Helpers\RandomHelper.cs" />
     <Compile Include="Helpers\WebDriverExtensions.cs" />
     <Compile Include="Login.cs">
@@ -264,6 +265,9 @@
     <Content Include="Drivers\geckodriver.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Drivers\data.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Drivers\msedgedriver.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

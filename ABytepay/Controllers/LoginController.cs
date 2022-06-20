@@ -1,10 +1,12 @@
 ﻿using ABytepay.Domain;
+using ABytepay.Helpers;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -31,6 +33,8 @@ namespace ABytepay.Controllers
             {
                 _web.Url = _url;
 
+                _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(500);
+
                 var email = _web.FindElement(By.Name("email"));
                 email.Clear();
                 email.SendKeys(_email);
@@ -39,9 +43,18 @@ namespace ABytepay.Controllers
                 password.Clear();
                 password.SendKeys(_password);
 
-                _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(100);
+                _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(500);
+                Thread.Sleep(500);
                 var login = _web.FindElement(By.XPath("//button[@type='submit'][text()='Đăng nhập']"));
+
                 login.Click();
+                while (true)
+                {
+                    Thread.Sleep(500);
+                    if (_web.FindElement(By.XPath("//*[@id='root']/div[1]/header/div[2]/div[1]/div[1]"), 10))
+                        break;
+                }
+
             }
             catch (Exception)
             {

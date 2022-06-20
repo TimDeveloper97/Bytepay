@@ -79,29 +79,17 @@ namespace ABytepay
             TimeoutKey();
             SyncData();
 
-            //MockData();
+            MockData();
         }
 
         void MockData()
         {
-            int index = 0;
-
-            //tbUsername.Text = "db05111997@gmail.com";
-            //tbPassword.Text = "123456789";
+            tbUsername.Text = "db05111997@gmail.com";
+            tbPassword.Text = "123456789";
 
             //@products.Add(new Product { Amount = "2", Name = "Bia tiger lon thùng 24" });
             //@products.Add(new Product { Amount = "2", Name = "1 thùng nước Sting lon" });
             //@products.Add(new Product { Amount = "2", Name = "Sữa rữa mặt cho da khô Beaty Med" });
-
-            //foreach (var item in @products)
-            //{
-            //    lvItems.Items.Add(new ListViewItem(new string[]
-            //    {
-            //        (index + 1).ToString(),
-            //        item.Name,
-            //        item.Amount
-            //    }));
-            //}
         }
 
         async void SyncData()
@@ -109,10 +97,7 @@ namespace ABytepay
             try
             {
                 _user = (await _firebase._firebaseDatabase.Child("Users").OnceAsync<User>())
-                                .FirstOrDefault(x => x.Object.Email == tbEmail.Text);
-
-                tbUsername.Text = _user.Object.Username;
-                tbPassword.Text = _user.Object.Password;
+                                .FirstOrDefault(x => x.Object.Email == Login.Email);
 
                 if (_user.Object.Products != null)
                 {
@@ -130,6 +115,13 @@ namespace ABytepay
                     item.Amount
                     }));
                 }
+
+                var account = CRUDHelper.Deserialize();
+                if(account != null)
+                {
+                    //tbUsername.Text = account.Username;
+                    //tbPassword.Text = account.Password;
+                }
             }
             catch (Exception)
             {
@@ -140,6 +132,12 @@ namespace ABytepay
         #region =================== Actions =====================
         private void btnAuto_Click(object sender, EventArgs e)
         {
+            if(lvItems.Items.Count == 0)
+            {
+                System.Windows.Forms.MessageBox.Show("Must add product to cart", "Error");
+                return;
+            }
+
             IsStart = true;
             IsError = false;
             //change state
@@ -162,6 +160,8 @@ namespace ABytepay
             {
                 try
                 {
+                    @web.FindElement(By.XPath("//*[@id='root']/div[1]/div[2]/div/div[2]/div/div/div/div/h2"), 15);
+
                     if (IsStart && !IsError)
                     {
                         new LoginController(
@@ -172,6 +172,7 @@ namespace ABytepay
                     }
                     else { btnStop_Click(null, null); return; }
 
+                    @web.FindElement(By.XPath("//*[@id='root']/div[1]/header/div[2]/div[1]/div[1]"), 15);
                     @web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
 
                     if (IsStart && !IsError)
@@ -188,6 +189,8 @@ namespace ABytepay
                         }, false).Execute();
                     }
                     else { btnStop_Click(null, null); return; }
+
+                    @web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
 
                     if (IsStart && !IsError)
                     {
@@ -210,6 +213,8 @@ namespace ABytepay
             if (cbRepeat.CheckState == CheckState.Checked)
                 new System.Threading.Thread(() =>
                 {
+                    @webIgnore.FindElement(By.XPath("//*[@id='root']/div[1]/div[2]/div/div[2]/div/div/div/div/h2"), 15);
+
                     if (IsStart && !IsError)
                     {
                         new LoginController(
@@ -220,6 +225,7 @@ namespace ABytepay
                     }
                     else { btnStop_Click(null, null); return; }
 
+                    @webIgnore.FindElement(By.XPath("//*[@id='root']/div[1]/header/div[2]/div[1]/div[1]"), 15);
                     @webIgnore.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
 
                     if (IsStart && !IsError)
@@ -237,6 +243,8 @@ namespace ABytepay
                     }
                     else { btnStop_Click(null, null); return; }
 
+                    @webIgnore.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
+
                     if (IsStart && !IsError)
                     {
                         this.Invoke(new Action(() => _linkIgnore = Clipboard.GetText()));
@@ -253,6 +261,8 @@ namespace ABytepay
             {
                 //btnStop_Click(null, null);
             }
+
+            CRUDHelper.Serialize(new Account { Email = Login.Email, Key = Login.Key, Password = tbPassword.Text, Username = tbUsername.Text });
         }
 
         public void btnStop_Click(object sender, EventArgs e)
@@ -278,13 +288,19 @@ namespace ABytepay
                     }));
                 }
 
-                @web?.Close();
-                @web = @web?.SwitchTo().Window(@web?.WindowHandles.First());
+                for (int i = @web.WindowHandles.Count - 1; i > 0; i--)
+                {
+                    @web = @web?.SwitchTo().Window(@web?.WindowHandles[i]);
+                    @web.Close();
+                }
 
                 if (cbRepeat.CheckState == CheckState.Checked)
                 {
-                    @webIgnore?.Close();
-                    @webIgnore = @webIgnore?.SwitchTo().Window(@webIgnore?.WindowHandles.First());
+                    for (int i = webIgnore.WindowHandles.Count - 1; i > 0; i--)
+                    {
+                        webIgnore = webIgnore?.SwitchTo().Window(webIgnore?.WindowHandles[i]);
+                        webIgnore.Close();
+                    }
                 }
             }
             catch (Exception)
@@ -341,9 +357,12 @@ namespace ABytepay
                 var amount = nAmount.Value;
                 if (amount > 0 && !string.IsNullOrEmpty(item))
                 {
-                    lvItems.Items.Add(new ListViewItem(new string[] { "1", item, amount.ToString() }));
+                    lvItems.Items.Add(new ListViewItem(new string[] { item, amount.ToString() }));
                     @products.Add(new Product { Name = item, Amount = amount.ToString() });
                     tbItem.Text = "";
+
+                    if (_user.Object.Products == null)
+                        _user.Object.Products = new List<Product>();
 
                     _user.Object.Products.Add(new Product { Name = item, Amount = amount.ToString() });
                     await _firebase._firebaseDatabase.Child("Users").Child(_user.Key).PutAsync(_user.Object);

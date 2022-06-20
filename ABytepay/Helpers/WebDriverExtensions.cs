@@ -10,14 +10,33 @@ namespace ABytepay.Helpers
 {
     public static class WebDriverExtensions
     {
-        public static IWebElement FindElement(this IWebDriver driver, By by, int timeoutInSeconds)
+        public static bool FindElement(this IWebDriver driver, By by, int timeoutInSeconds)
         {
             if (timeoutInSeconds > 0)
             {
-                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
-                return wait.Until(drv => drv.FindElement(by));
+                try
+                {
+                    var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
+                    return wait.Until(drv => driver.IsElementVisible(by));
+                }
+                catch (Exception)
+                {
+                }
             }
-            return driver.FindElement(by);
+            return false;
+        }
+
+        private static bool IsElementVisible(this IWebDriver driver, By searchElementBy)
+        {
+            try
+            {
+                return driver.FindElement(searchElementBy).Displayed;
+
+            }
+            catch (NoSuchElementException)
+            {
+                return false;
+            }
         }
     }
 }

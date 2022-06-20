@@ -1,4 +1,5 @@
-﻿using ABytepay.Models;
+﻿using ABytepay.Helpers;
+using ABytepay.Models;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using System;
@@ -47,6 +48,8 @@ namespace ABytepay.Controllers
 
             try
             {
+                _web.FindElement(By.XPath("//div[@class='item_text'][text()='Danh sách giao dịch']"), 15);
+
                 _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(100);
                 var transaction = _web.FindElement(By.XPath("//div[@class='item_text'][text()='Danh sách giao dịch']"));
                 transaction.Click();
@@ -67,6 +70,7 @@ namespace ABytepay.Controllers
         {
             try
             {
+
                 _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(500);
                 //IJavaScriptExecutor js = (IJavaScriptExecutor)_web; 
                 //js.ExecuteAsyncScript("window.scrollTo(0, document.body.scrollHeight)");
@@ -74,7 +78,9 @@ namespace ABytepay.Controllers
                 var body = _web.FindElement(By.CssSelector("body"));
                 body.SendKeys(Keys.PageDown);
 
-                //var name = _web.FindElement(By.XPath("//input[@name='nameCustomer'][@class='sc-iqsfdx fYdb']"));
+                //wait
+                _web.FindElement(By.Name("nameCustomer"), 15);
+
                 var name = _web.FindElement(By.Name("nameCustomer"));
                 name.SendKeys(_receiver.Name);
 
@@ -112,7 +118,10 @@ namespace ABytepay.Controllers
 
                     var items = _web.FindElements(By.XPath("//input[@aria-autocomplete='list']"));
                     items[items.Count - 1].SendKeys(_products[i].Name);
-                    Thread.Sleep(500);
+
+                    _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(1000);
+                    Thread.Sleep(1000);
+
                     items[items.Count - 1].SendKeys(Keys.Tab);
                 }
 
@@ -144,7 +153,11 @@ namespace ABytepay.Controllers
             try
             {
                 _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(500);
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
+
+                //wait
+                _web.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div/p"), 15);
+
                 var link = _web.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div/p"));
                 link.Click();
             }

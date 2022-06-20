@@ -54,10 +54,15 @@ namespace ABytepay.Controllers
         {
             try
             {
+                _web.FindElement(By.XPath($"//*[@id='root']/div[1]/div[2]/div[2]/div/div/div[2]"), 15);
+
                 var appota = _web.FindElement(By.XPath($"//*[@id='root']/div[1]/div[2]/div[2]/div/div/div[2]"));
                 appota.Click();
 
                 _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(1000);
+                //wait
+                _web.FindElement(By.ClassName("checkout-item"), 15);
+
                 var items = _web.FindElements(By.ClassName("checkout-item"));
                 if (items.Count < 6)
                 {

@@ -25,6 +25,12 @@ namespace ABytepay
             InitializeComponent();
 
             _firebase = new BaseFirebase();
+            var account = CRUDHelper.Deserialize();
+            if(account != null)
+            {
+                tbEmail.Text = account.Email;
+                tbKey.Text = account.Key;
+            }
         }
 
         #region ======================= Actions ==========================
@@ -50,6 +56,8 @@ namespace ABytepay
         {
             if (!string.IsNullOrEmpty(tbKey.Text) && !string.IsNullOrEmpty(tbEmail.Text))
             {
+                CRUDHelper.Serialize(new Account { Email = tbEmail.Text, Key = tbKey.Text });
+
                 var key = (await _firebase._firebaseDatabase.Child("Keys").OnceAsync<LicenseKey>())
                     .FirstOrDefault(x => x.Object.Key == tbKey.Text);
 
@@ -85,8 +93,8 @@ namespace ABytepay
                             await _firebase._firebaseDatabase.Child("Users").PostAsync(u);
                         }
                     }    
-                    else if(mdevice != user.Object.ComputerId)
-                        System.Windows.Forms.MessageBox.Show("Email is use in another machine", "Error");
+                    //else if(mdevice != user.Object.ComputerId)
+                    //    System.Windows.Forms.MessageBox.Show("Email is use in another machine", "Error");
                     //else if(user.Object.Email != null && user.Object.Email != tbEmail.Text)
                     //    System.Windows.Forms.MessageBox.Show("License key is use in another email", "Error");
                     else
