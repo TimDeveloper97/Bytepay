@@ -55,8 +55,8 @@ namespace ABytepay
 
                 if (key == null)
                     System.Windows.Forms.MessageBox.Show("License key doesn't exist", "Error");
-                //else if (key.Object.IsUse)
-                //    System.Windows.Forms.MessageBox.Show("License key is already used", "Error");
+                else if (key.Object.Email != null && key.Object.Email != tbEmail.Text)
+                    System.Windows.Forms.MessageBox.Show("License key is use in another email", "Error");
                 else if (key.Object.End < DateTime.Now)
                     System.Windows.Forms.MessageBox.Show("License key is out of date", "Error");
                 else
@@ -87,6 +87,8 @@ namespace ABytepay
                     }    
                     else if(mdevice != user.Object.ComputerId)
                         System.Windows.Forms.MessageBox.Show("Email is use in another machine", "Error");
+                    //else if(user.Object.Email != null && user.Object.Email != tbEmail.Text)
+                    //    System.Windows.Forms.MessageBox.Show("License key is use in another email", "Error");
                     else
                     {
                         var isKeyExist = user.Object.Keys?.Any(x => x == tbKey.Text);
@@ -103,6 +105,7 @@ namespace ABytepay
                                 user.Object.Keys.Add(tbKey.Text);
 
                                 key.Object.IsUse = true;
+                                key.Object.Email = tbEmail.Text;
 
                                 await _firebase._firebaseDatabase.Child("Keys").Child(key.Key).PutAsync(key.Object);
                                 await _firebase._firebaseDatabase.Child("Users").Child(user.Key).PutAsync(user.Object);

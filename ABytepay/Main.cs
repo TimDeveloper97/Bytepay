@@ -79,15 +79,15 @@ namespace ABytepay
             TimeoutKey();
             SyncData();
 
-            MockData();
+            //MockData();
         }
 
         void MockData()
         {
             int index = 0;
 
-            tbUsername.Text = "db05111997@gmail.com";
-            tbPassword.Text = "123456789";
+            //tbUsername.Text = "db05111997@gmail.com";
+            //tbPassword.Text = "123456789";
 
             //@products.Add(new Product { Amount = "2", Name = "Bia tiger lon thùng 24" });
             //@products.Add(new Product { Amount = "2", Name = "1 thùng nước Sting lon" });
@@ -110,6 +110,10 @@ namespace ABytepay
             {
                 _user = (await _firebase._firebaseDatabase.Child("Users").OnceAsync<User>())
                                 .FirstOrDefault(x => x.Object.Email == tbEmail.Text);
+
+                tbUsername.Text = _user.Object.Username;
+                tbPassword.Text = _user.Object.Password;
+
                 if (_user.Object.Products != null)
                 {
                     foreach (var item in _user.Object.Products)

@@ -10,12 +10,15 @@ namespace ABytepay.Models
     {
         public string Email { get; set; }
         public string ComputerId { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
         public List<Product> Products { get; set; }
         public List<string> Keys { get; set; }
     }
 
     public class LicenseKey
     {
+        public string Email { get; set; }
         public string Key { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
