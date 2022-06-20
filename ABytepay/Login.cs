@@ -18,6 +18,7 @@ namespace ABytepay
     {
         static BaseFirebase _firebase;
         public static string Key = "";
+        public static string Email = "";
 
         public Login()
         {
@@ -110,6 +111,8 @@ namespace ABytepay
                         else if(isKeyExist == true)
                         {
                             Key = tbKey.Text;
+                            Email = tbEmail.Text;
+
                             var main = new Main();
                             main.Show();
                             this.Hide();

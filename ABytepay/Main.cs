@@ -2,6 +2,8 @@
 using ABytepay.Domain;
 using ABytepay.Helpers;
 using ABytepay.Models;
+using Firebase.Database;
+using Firebase.Database.Query;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
@@ -27,6 +29,7 @@ namespace ABytepay
         public static bool IsError = false;
         static bool IsInternet = true;
         BaseFirebase _firebase;
+        static FirebaseObject<User> _user;
 
         public Main()
         {
@@ -69,12 +72,12 @@ namespace ABytepay
             tbnRandom_Click(null, null);
             cbRepeat.Checked = true;
 
-            lvItems.Columns.Add("Index");
-            lvItems.Columns.Add("Name", 210);
+            lvItems.Columns.Add("Name", 240);
             lvItems.Columns.Add("Amount");
 
             UpdateStatusInternet();
             TimeoutKey();
+            SyncData();
 
             MockData();
         }
@@ -86,21 +89,48 @@ namespace ABytepay
             tbUsername.Text = "db05111997@gmail.com";
             tbPassword.Text = "123456789";
 
-            @products.Add(new Product { Amount = "2", Name = "Bia tiger lon thùng 24" });
-            @products.Add(new Product { Amount = "2", Name = "1 thùng nước Sting lon" });
-            @products.Add(new Product { Amount = "2", Name = "Sữa rữa mặt cho da khô Beaty Med" });
+            //@products.Add(new Product { Amount = "2", Name = "Bia tiger lon thùng 24" });
+            //@products.Add(new Product { Amount = "2", Name = "1 thùng nước Sting lon" });
+            //@products.Add(new Product { Amount = "2", Name = "Sữa rữa mặt cho da khô Beaty Med" });
 
-            foreach (var item in @products)
-            {
-                lvItems.Items.Add(new ListViewItem(new string[]
-                {
-                    (index + 1).ToString(),
-                    item.Name,
-                    item.Amount
-                }));
-            }
+            //foreach (var item in @products)
+            //{
+            //    lvItems.Items.Add(new ListViewItem(new string[]
+            //    {
+            //        (index + 1).ToString(),
+            //        item.Name,
+            //        item.Amount
+            //    }));
+            //}
         }
 
+        async void SyncData()
+        {
+            try
+            {
+                _user = (await _firebase._firebaseDatabase.Child("Users").OnceAsync<User>())
+                                .FirstOrDefault(x => x.Object.Email == tbEmail.Text);
+                if (_user.Object.Products != null)
+                {
+                    foreach (var item in _user.Object.Products)
+                    {
+                        @products.Add(item);
+                    }
+                }
+
+                foreach (var item in @products)
+                {
+                    lvItems.Items.Add(new ListViewItem(new string[]
+                    {
+                    item.Name,
+                    item.Amount
+                    }));
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
         #endregion
 
         #region =================== Actions =====================
@@ -299,22 +329,40 @@ namespace ABytepay
             }
         }
 
-        private void btnAdd_Click(object sender, EventArgs e)
+        private async void btnAdd_Click(object sender, EventArgs e)
         {
-            var item = tbItem.Text;
-            var amount = nAmount.Value;
-            if (amount > 0 && !string.IsNullOrEmpty(item))
+            try
             {
-                lvItems.Items.Add(new ListViewItem(new string[] { "1", item, amount.ToString() }));
-                @products.Add(new Product { Name = item, Amount = amount.ToString() });
-                tbItem.Text = "";
+                var item = tbItem.Text;
+                var amount = nAmount.Value;
+                if (amount > 0 && !string.IsNullOrEmpty(item))
+                {
+                    lvItems.Items.Add(new ListViewItem(new string[] { "1", item, amount.ToString() }));
+                    @products.Add(new Product { Name = item, Amount = amount.ToString() });
+                    tbItem.Text = "";
+
+                    _user.Object.Products.Add(new Product { Name = item, Amount = amount.ToString() });
+                    await _firebase._firebaseDatabase.Child("Users").Child(_user.Key).PutAsync(_user.Object);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
-        private void lvItems_DoubleClick(object sender, EventArgs e)
+        private async void lvItems_DoubleClick(object sender, EventArgs e)
         {
-            @products.RemoveAt(lvItems.SelectedItems[0].Index);
-            lvItems.Items.RemoveAt(lvItems.SelectedItems[0].Index);
+            try
+            {
+                @products.RemoveAt(lvItems.SelectedItems[0].Index);
+                lvItems.Items.RemoveAt(lvItems.SelectedItems[0].Index);
+
+                _user.Object.Products.RemoveAt(lvItems.SelectedItems[0].Index);
+                await _firebase._firebaseDatabase.Child("Users").Child(_user.Key).PutAsync(_user.Object);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void tbnRandom_Click(object sender, EventArgs e)
