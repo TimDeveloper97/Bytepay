@@ -9,9 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -156,7 +158,7 @@ namespace ABytepay
 
             // Actions
             // Normal tab
-            new System.Threading.Thread(() =>
+            var thread = new System.Threading.Thread(() =>
             {
                 try
                 {
@@ -207,11 +209,14 @@ namespace ABytepay
 
                 }
 
-            }).Start();
+            });
+            thread.IsBackground = true;
+            thread.Start();
 
             // Ignore tab
             if (cbRepeat.CheckState == CheckState.Checked)
-                new System.Threading.Thread(() =>
+            {
+                var threadIgnore = new System.Threading.Thread(() =>
                 {
                     @webIgnore.FindElement(By.XPath("//*[@id='root']/div[1]/div[2]/div/div[2]/div/div/div/div/h2"), 15);
 
@@ -256,7 +261,10 @@ namespace ABytepay
 
                     //btnStop_Click(null, null);
 
-                }).Start();
+                });
+                threadIgnore.IsBackground = true;
+                threadIgnore.Start();
+            }
             else
             {
                 //btnStop_Click(null, null);
@@ -423,6 +431,16 @@ namespace ABytepay
             {
                 @web.Close();
                 @webIgnore.Close();
+
+                //var assembly = AssemblyName.GetAssemblyName(Assembly.GetExecutingAssembly().Location).Name;
+                //Process[] workers = Process.GetProcessesByName(assembly);
+                //foreach (Process worker in workers)
+                //{
+                //    worker.Kill();
+                //    worker.WaitForExit();
+                //    worker.Dispose();
+                //}
+                Environment.Exit(0);
             }
             catch (Exception)
             {
