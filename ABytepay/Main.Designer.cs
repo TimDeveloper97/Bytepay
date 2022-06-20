@@ -61,12 +61,24 @@ namespace ABytepay
             this.cbRepeat = new System.Windows.Forms.CheckBox();
             this.btnAuto = new System.Windows.Forms.Button();
             this.rInternet = new System.Windows.Forms.RadioButton();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.btnLoginNormal = new System.Windows.Forms.Button();
+            this.btnTransactionNormal = new System.Windows.Forms.Button();
+            this.btnPaymentNormal = new System.Windows.Forms.Button();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.btnPaymentIgnore = new System.Windows.Forms.Button();
+            this.btnTransactionIgnore = new System.Windows.Forms.Button();
+            this.btnLoginIgnore = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nAmount)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -172,14 +184,14 @@ namespace ABytepay
             this.groupBox4.Controls.Add(this.tbItem);
             this.groupBox4.Location = new System.Drawing.Point(222, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(346, 215);
+            this.groupBox4.Size = new System.Drawing.Size(408, 215);
             this.groupBox4.TabIndex = 3;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Items";
             // 
             // nAmount
             // 
-            this.nAmount.Location = new System.Drawing.Point(227, 15);
+            this.nAmount.Location = new System.Drawing.Point(274, 15);
             this.nAmount.Name = "nAmount";
             this.nAmount.Size = new System.Drawing.Size(32, 20);
             this.nAmount.TabIndex = 1;
@@ -187,7 +199,7 @@ namespace ABytepay
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(175, 19);
+            this.label4.Location = new System.Drawing.Point(222, 19);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(46, 13);
             this.label4.TabIndex = 5;
@@ -209,7 +221,7 @@ namespace ABytepay
             this.lvItems.Location = new System.Drawing.Point(6, 49);
             this.lvItems.MultiSelect = false;
             this.lvItems.Name = "lvItems";
-            this.lvItems.Size = new System.Drawing.Size(334, 160);
+            this.lvItems.Size = new System.Drawing.Size(393, 160);
             this.lvItems.TabIndex = 2;
             this.lvItems.UseCompatibleStateImageBehavior = false;
             this.lvItems.View = System.Windows.Forms.View.Details;
@@ -217,7 +229,7 @@ namespace ABytepay
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(265, 13);
+            this.btnAdd.Location = new System.Drawing.Point(324, 14);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 1;
@@ -229,7 +241,7 @@ namespace ABytepay
             // 
             this.tbItem.Location = new System.Drawing.Point(50, 15);
             this.tbItem.Name = "tbItem";
-            this.tbItem.Size = new System.Drawing.Size(119, 20);
+            this.tbItem.Size = new System.Drawing.Size(166, 20);
             this.tbItem.TabIndex = 0;
             // 
             // groupBox5
@@ -331,16 +343,16 @@ namespace ABytepay
             this.groupBox6.Controls.Add(this.btnAuto);
             this.groupBox6.Location = new System.Drawing.Point(222, 234);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(346, 60);
+            this.groupBox6.Size = new System.Drawing.Size(408, 60);
             this.groupBox6.TabIndex = 5;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Auto";
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(258, 19);
+            this.btnStop.Location = new System.Drawing.Point(286, 19);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(82, 32);
+            this.btnStop.Size = new System.Drawing.Size(105, 32);
             this.btnStop.TabIndex = 3;
             this.btnStop.Tag = "false";
             this.btnStop.Text = "[End] Stop";
@@ -361,7 +373,7 @@ namespace ABytepay
             // 
             this.btnAuto.Location = new System.Drawing.Point(157, 19);
             this.btnAuto.Name = "btnAuto";
-            this.btnAuto.Size = new System.Drawing.Size(82, 32);
+            this.btnAuto.Size = new System.Drawing.Size(111, 32);
             this.btnAuto.TabIndex = 1;
             this.btnAuto.Tag = "false";
             this.btnAuto.Text = "[Start] Auto";
@@ -374,7 +386,7 @@ namespace ABytepay
             this.rInternet.BackColor = System.Drawing.SystemColors.ControlLight;
             this.rInternet.Checked = true;
             this.rInternet.ForeColor = System.Drawing.Color.Black;
-            this.rInternet.Location = new System.Drawing.Point(12, 300);
+            this.rInternet.Location = new System.Drawing.Point(12, 390);
             this.rInternet.Name = "rInternet";
             this.rInternet.Size = new System.Drawing.Size(85, 17);
             this.rInternet.TabIndex = 6;
@@ -382,11 +394,113 @@ namespace ABytepay
             this.rInternet.Text = "radioButton1";
             this.rInternet.UseVisualStyleBackColor = false;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.groupBox8);
+            this.groupBox2.Controls.Add(this.groupBox7);
+            this.groupBox2.Location = new System.Drawing.Point(12, 300);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(618, 84);
+            this.groupBox2.TabIndex = 7;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Actions";
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.btnPaymentNormal);
+            this.groupBox7.Controls.Add(this.btnTransactionNormal);
+            this.groupBox7.Controls.Add(this.btnLoginNormal);
+            this.groupBox7.Location = new System.Drawing.Point(9, 19);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(297, 57);
+            this.groupBox7.TabIndex = 8;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Normal";
+            // 
+            // btnLoginNormal
+            // 
+            this.btnLoginNormal.Location = new System.Drawing.Point(6, 19);
+            this.btnLoginNormal.Name = "btnLoginNormal";
+            this.btnLoginNormal.Size = new System.Drawing.Size(82, 32);
+            this.btnLoginNormal.TabIndex = 2;
+            this.btnLoginNormal.Tag = "false";
+            this.btnLoginNormal.Text = "[1] Login";
+            this.btnLoginNormal.UseVisualStyleBackColor = true;
+            this.btnLoginNormal.Click += new System.EventHandler(this.btnLoginNormal_Click);
+            // 
+            // btnTransactionNormal
+            // 
+            this.btnTransactionNormal.Location = new System.Drawing.Point(94, 19);
+            this.btnTransactionNormal.Name = "btnTransactionNormal";
+            this.btnTransactionNormal.Size = new System.Drawing.Size(101, 32);
+            this.btnTransactionNormal.TabIndex = 3;
+            this.btnTransactionNormal.Tag = "false";
+            this.btnTransactionNormal.Text = "[2] Transaction";
+            this.btnTransactionNormal.UseVisualStyleBackColor = true;
+            this.btnTransactionNormal.Click += new System.EventHandler(this.btnTransactionNormal_Click);
+            // 
+            // btnPaymentNormal
+            // 
+            this.btnPaymentNormal.Location = new System.Drawing.Point(207, 19);
+            this.btnPaymentNormal.Name = "btnPaymentNormal";
+            this.btnPaymentNormal.Size = new System.Drawing.Size(82, 32);
+            this.btnPaymentNormal.TabIndex = 4;
+            this.btnPaymentNormal.Tag = "false";
+            this.btnPaymentNormal.Text = "[3] Payment";
+            this.btnPaymentNormal.UseVisualStyleBackColor = true;
+            this.btnPaymentNormal.Click += new System.EventHandler(this.btnPaymentNormal_Click);
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.btnPaymentIgnore);
+            this.groupBox8.Controls.Add(this.btnTransactionIgnore);
+            this.groupBox8.Controls.Add(this.btnLoginIgnore);
+            this.groupBox8.Location = new System.Drawing.Point(312, 19);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(297, 57);
+            this.groupBox8.TabIndex = 9;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Ignore";
+            // 
+            // btnPaymentIgnore
+            // 
+            this.btnPaymentIgnore.Location = new System.Drawing.Point(207, 19);
+            this.btnPaymentIgnore.Name = "btnPaymentIgnore";
+            this.btnPaymentIgnore.Size = new System.Drawing.Size(82, 32);
+            this.btnPaymentIgnore.TabIndex = 4;
+            this.btnPaymentIgnore.Tag = "false";
+            this.btnPaymentIgnore.Text = "[3] Payment";
+            this.btnPaymentIgnore.UseVisualStyleBackColor = true;
+            this.btnPaymentIgnore.Click += new System.EventHandler(this.btnPaymentIgnore_Click);
+            // 
+            // btnTransactionIgnore
+            // 
+            this.btnTransactionIgnore.Location = new System.Drawing.Point(94, 19);
+            this.btnTransactionIgnore.Name = "btnTransactionIgnore";
+            this.btnTransactionIgnore.Size = new System.Drawing.Size(101, 32);
+            this.btnTransactionIgnore.TabIndex = 3;
+            this.btnTransactionIgnore.Tag = "false";
+            this.btnTransactionIgnore.Text = "[2] Transaction";
+            this.btnTransactionIgnore.UseVisualStyleBackColor = true;
+            this.btnTransactionIgnore.Click += new System.EventHandler(this.btnTransactionIgnore_Click);
+            // 
+            // btnLoginIgnore
+            // 
+            this.btnLoginIgnore.Location = new System.Drawing.Point(6, 19);
+            this.btnLoginIgnore.Name = "btnLoginIgnore";
+            this.btnLoginIgnore.Size = new System.Drawing.Size(82, 32);
+            this.btnLoginIgnore.TabIndex = 2;
+            this.btnLoginIgnore.Tag = "false";
+            this.btnLoginIgnore.Text = "[1] Login";
+            this.btnLoginIgnore.UseVisualStyleBackColor = true;
+            this.btnLoginIgnore.Click += new System.EventHandler(this.btnLoginIgnore_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(580, 325);
+            this.ClientSize = new System.Drawing.Size(641, 413);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.rInternet);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
@@ -411,6 +525,9 @@ namespace ABytepay
             this.groupBox5.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -449,6 +566,15 @@ namespace ABytepay
         private System.Windows.Forms.CheckBox cbRepeat;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.RadioButton rInternet;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Button btnPaymentIgnore;
+        private System.Windows.Forms.Button btnTransactionIgnore;
+        private System.Windows.Forms.Button btnLoginIgnore;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.Button btnPaymentNormal;
+        private System.Windows.Forms.Button btnTransactionNormal;
+        private System.Windows.Forms.Button btnLoginNormal;
     }
 }
 

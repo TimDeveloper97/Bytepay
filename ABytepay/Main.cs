@@ -46,27 +46,27 @@ namespace ABytepay
             @baseIgnore = new BaseIgnoreController();
             @products = new List<Product>();
 
-            if(rFirefox.Checked)
+            if (rFirefox.Checked)
             {
                 @base.InitFirefox();
                 @baseIgnore.InitFirefox();
                 @web = @base.GetFirefox();
                 @webIgnore = @baseIgnore.GetFirefox();
-            }    
-            else if(rChrome.Checked)
+            }
+            else if (rChrome.Checked)
             {
                 @base.InitChrome();
                 @baseIgnore.InitChrome();
                 @web = @base.GetChrome();
                 @webIgnore = @baseIgnore.GetChrome();
-            }   
+            }
             else
             {
                 @base.InitEdge();
                 @baseIgnore.InitEdge();
                 @web = @base.GetEdge();
                 @webIgnore = @baseIgnore.GetEdge();
-            }    
+            }
 
             nAmount.Value = 1;
             tbnRandom_Click(null, null);
@@ -117,7 +117,7 @@ namespace ABytepay
                 }
 
                 var account = CRUDHelper.Deserialize();
-                if(account != null)
+                if (account != null)
                 {
                     //tbUsername.Text = account.Username;
                     //tbPassword.Text = account.Password;
@@ -132,7 +132,7 @@ namespace ABytepay
         #region =================== Actions =====================
         private void btnAuto_Click(object sender, EventArgs e)
         {
-            if(lvItems.Items.Count == 0)
+            if (lvItems.Items.Count == 0)
             {
                 System.Windows.Forms.MessageBox.Show("Must add product to cart", "Error");
                 return;
@@ -306,6 +306,83 @@ namespace ABytepay
             catch (Exception)
             {
             }
+        }
+
+
+        private void btnLoginNormal_Click(object sender, EventArgs e)
+        {
+            new LoginController(
+                        @web,
+                        "https://bytepay.vn/login",
+                        tbUsername.Text,
+                        tbPassword.Text, false).Execute();
+        }
+
+        private void btnTransactionNormal_Click(object sender, EventArgs e)
+        {
+            new TransactionController(
+                        @web,
+                        @products,
+                        new Receiver
+                        {
+                            Name = tbName.Text,
+                            Address = tbAddress.Text,
+                            Email = tbEmail.Text,
+                            Phone = tbPhone.Text
+                        }, false).Execute();
+        }
+
+        private void btnPaymentNormal_Click(object sender, EventArgs e)
+        {
+            for (int i = @web.WindowHandles.Count - 1; i > 0; i--)
+            {
+                @web = @web?.SwitchTo().Window(@web?.WindowHandles[i]);
+                @web.Close();
+            }
+
+            this.Invoke(new Action(() => _link = Clipboard.GetText()));
+            new PaymentController(
+                @web,
+                _link,
+                23, false).Execute();
+        }
+
+        private void btnLoginIgnore_Click(object sender, EventArgs e)
+        {
+            new LoginController(
+                       @webIgnore,
+                       "https://bytepay.vn/login",
+                       tbUsername.Text,
+                       tbPassword.Text, true).Execute();
+        }
+
+        private void btnTransactionIgnore_Click(object sender, EventArgs e)
+        {
+            new TransactionController(
+                        @webIgnore,
+                        @products,
+                        new Receiver
+                        {
+                            Name = tbName.Text,
+                            Address = tbAddress.Text,
+                            Email = tbEmail.Text,
+                            Phone = tbPhone.Text
+                        }, true).Execute();
+        }
+
+        private void btnPaymentIgnore_Click(object sender, EventArgs e)
+        {
+            for (int i = webIgnore.WindowHandles.Count - 1; i > 0; i--)
+            {
+                webIgnore = webIgnore?.SwitchTo().Window(webIgnore?.WindowHandles[i]);
+                webIgnore.Close();
+            }
+            this.Invoke(new Action(() => _linkIgnore = Clipboard.GetText()));
+            new PaymentController(
+                @webIgnore,
+                _linkIgnore,
+                23, true).Execute();
+
         }
         #endregion
 
