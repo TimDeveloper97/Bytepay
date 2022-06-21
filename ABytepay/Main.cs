@@ -32,6 +32,7 @@ namespace ABytepay
         static bool IsInternet = true;
         BaseFirebase _firebase;
         static FirebaseObject<User> _user;
+        static bool IsClose = false;
 
         public Main()
         {
@@ -47,6 +48,11 @@ namespace ABytepay
             _firebase = new BaseFirebase();
             @baseIgnore = new BaseIgnoreController();
             @products = new List<Product>();
+
+            IsClose = false;
+            IsInternet = true;
+            IsError = false;
+            IsStart = false;
 
             if (rFirefox.Checked)
             {
@@ -319,7 +325,6 @@ namespace ABytepay
             }
         }
 
-
         private void btnLoginNormal_Click(object sender, EventArgs e)
         {
             new LoginController(
@@ -400,46 +405,58 @@ namespace ABytepay
         #region =================== Event & Method =====================
         private void rChrome_CheckedChanged(object sender, EventArgs e)
         {
-            @base.InitChrome();
-            @web = @base.GetChrome();
+            CloseTab();
 
-            @baseIgnore.InitChrome();
-            @webIgnore = @baseIgnore.GetChrome();
+            try
+            {
+                @base.InitChrome();
+                @web = @base.GetChrome();
+
+                @baseIgnore.InitChrome();
+                @webIgnore = @baseIgnore.GetChrome();
+            }
+            catch (Exception){}
         }
 
         private void rFirefox_CheckedChanged(object sender, EventArgs e)
         {
-            @base.InitFirefox();
-            @web = @base.GetFirefox();
+            CloseTab();
 
-            @baseIgnore.InitFirefox();
-            @webIgnore = @baseIgnore.GetFirefox();
+            try
+            {
+                @base.InitFirefox();
+                @web = @base.GetFirefox();
+
+                @baseIgnore.InitFirefox();
+                @webIgnore = @baseIgnore.GetFirefox();
+            }
+            catch (Exception)
+            {}
         }
 
         private void rEdge_CheckedChanged(object sender, EventArgs e)
         {
-            @base.InitEdge();
-            @web = @base.GetEdge();
+            CloseTab();
 
-            @baseIgnore.InitEdge();
-            @webIgnore = @baseIgnore.GetEdge();
+            try
+            {
+                @base.InitEdge();
+                @web = @base.GetEdge();
+
+                @baseIgnore.InitEdge();
+                @webIgnore = @baseIgnore.GetEdge();
+            }
+            catch (Exception)
+            {}
         }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
             try
             {
+                IsClose = true;
                 @web.Close();
                 @webIgnore.Close();
-
-                //var assembly = AssemblyName.GetAssemblyName(Assembly.GetExecutingAssembly().Location).Name;
-                //Process[] workers = Process.GetProcessesByName(assembly);
-                //foreach (Process worker in workers)
-                //{
-                //    worker.Kill();
-                //    worker.WaitForExit();
-                //    worker.Dispose();
-                //}
                 Environment.Exit(0);
             }
             catch (Exception)
@@ -502,6 +519,21 @@ namespace ABytepay
 
             timer.Tick += (s, e) =>
             {
+
+                if (IsClose)
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        try
+                        {
+                            timer.Stop();
+                            this.Close();
+                        }
+                        catch (Exception)
+                        { }
+                    }));
+                }
+
                 try
                 {
                     IsInternet = CheckForInternetConnection();
@@ -537,6 +569,21 @@ namespace ABytepay
             {
                 var key = (await _firebase._firebaseDatabase.Child("Keys").OnceAsync<LicenseKey>())
                     .FirstOrDefault(x => x.Object.Key == Login.Key);
+
+                if(IsClose)
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        try
+                        {
+                            timer.Stop();
+                            this.Close();
+                        }
+                        catch (Exception)
+                        {}
+                    }));
+                }
+
 
                 if (key == null)
                 {
@@ -576,6 +623,25 @@ namespace ABytepay
             {
                 return false;
             }
+        }
+
+        private void CloseTab()
+        {
+            try
+            {
+                for (int i = 0; i < web.WindowHandles.Count; i++)
+                {
+                    web = web.SwitchTo().Window(web.WindowHandles[i]);
+                    web.Close();
+                }
+
+                for (int i = 0; i < webIgnore.WindowHandles.Count; i++)
+                {
+                    webIgnore = webIgnore.SwitchTo().Window(webIgnore.WindowHandles[i]);
+                    webIgnore.Close();
+                }
+            }
+            catch (Exception) { }
         }
         #endregion
 
