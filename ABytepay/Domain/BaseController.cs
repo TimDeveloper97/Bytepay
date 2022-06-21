@@ -27,8 +27,8 @@ namespace ABytepay.Domain
                 EdgeDriverService service = EdgeDriverService.CreateDefaultService(path + @"\Drivers\", "msedgedriver.exe");
                 service.HideCommandPromptWindow = true;
 
-                if (_edgeDriver == null)
-                    _edgeDriver = new EdgeDriver(service);
+                _edgeDriver = new EdgeDriver(service);
+
             }
             catch (Exception ex)
             {
@@ -43,8 +43,8 @@ namespace ABytepay.Domain
                 FirefoxDriverService service = FirefoxDriverService.CreateDefaultService(path + @"\Drivers\", "geckodriver.exe");
                 service.HideCommandPromptWindow = true;
 
-                if (_firefoxDriver == null)
-                    _firefoxDriver = new FirefoxDriver(service);
+                _firefoxDriver = new FirefoxDriver(service);
+
             }
             catch (Exception ex)
             {
@@ -60,8 +60,8 @@ namespace ABytepay.Domain
                 ChromeDriverService service = ChromeDriverService.CreateDefaultService(path + @"\Drivers\", "chromedriver.exe");
                 service.HideCommandPromptWindow = true;
 
-                if (_chromeDriver == null)
-                    _chromeDriver = new ChromeDriver(service);
+                _chromeDriver = new ChromeDriver(service);
+
             }
             catch (Exception ex)
             {
@@ -110,8 +110,7 @@ namespace ABytepay.Domain
                 EdgeDriverService service = EdgeDriverService.CreateDefaultService(path + @"\Drivers\", "msedgedriver.exe");
                 service.HideCommandPromptWindow = true;
 
-                if (_edgeDriver == null)
-                    _edgeDriver = new EdgeDriver(service, options);
+                _edgeDriver = new EdgeDriver(service, options);
             }
             catch (Exception ex)
             {
@@ -129,8 +128,8 @@ namespace ABytepay.Domain
                 FirefoxDriverService service = FirefoxDriverService.CreateDefaultService(path + @"\Drivers\", "geckodriver.exe");
                 service.HideCommandPromptWindow = true;
 
-                if (_firefoxDriver == null)
-                    _firefoxDriver = new FirefoxDriver(service, options);
+                _firefoxDriver = new FirefoxDriver(service, options);
+
             }
             catch (Exception ex)
             {
@@ -149,8 +148,8 @@ namespace ABytepay.Domain
                 ChromeDriverService service = ChromeDriverService.CreateDefaultService(path + @"\Drivers\", "chromedriver.exe");
                 service.HideCommandPromptWindow = true;
 
-                if (_chromeDriver == null)
-                    _chromeDriver = new ChromeDriver(service, options);
+                _chromeDriver = new ChromeDriver(service, options);
+
             }
             catch (Exception ex)
             {

@@ -32,11 +32,14 @@ namespace ABytepay
         static bool IsInternet = true;
         BaseFirebase _firebase;
         static FirebaseObject<User> _user;
-        static bool IsClose = false;
+        public static bool IsClose = false;
+        Login _login;
 
-        public Main()
+        public Main(Login login)
         {
             InitializeComponent();
+            
+            _login = login;
             Init();
         }
 
@@ -405,58 +408,64 @@ namespace ABytepay
         #region =================== Event & Method =====================
         private void rChrome_CheckedChanged(object sender, EventArgs e)
         {
-            CloseTab();
-
-            try
+            if(rChrome.Checked == true)
             {
-                @base.InitChrome();
-                @web = @base.GetChrome();
+                CloseTab();
 
-                @baseIgnore.InitChrome();
-                @webIgnore = @baseIgnore.GetChrome();
-            }
-            catch (Exception){}
+                try
+                {
+                    @base.InitChrome();
+                    @web = @base.GetChrome();
+
+                    @baseIgnore.InitChrome();
+                    @webIgnore = @baseIgnore.GetChrome();
+                }
+                catch (Exception) { }
+            }    
         }
 
         private void rFirefox_CheckedChanged(object sender, EventArgs e)
         {
-            CloseTab();
-
-            try
+            if(rFirefox.Checked == true)
             {
-                @base.InitFirefox();
-                @web = @base.GetFirefox();
+                CloseTab();
 
-                @baseIgnore.InitFirefox();
-                @webIgnore = @baseIgnore.GetFirefox();
-            }
-            catch (Exception)
-            {}
+                try
+                {
+                    @base.InitFirefox();
+                    @web = @base.GetFirefox();
+
+                    @baseIgnore.InitFirefox();
+                    @webIgnore = @baseIgnore.GetFirefox();
+                }
+                catch (Exception)
+                { }
+            }    
         }
 
         private void rEdge_CheckedChanged(object sender, EventArgs e)
         {
-            CloseTab();
-
-            try
+            if(rEdge.Checked == true)
             {
-                @base.InitEdge();
-                @web = @base.GetEdge();
+                CloseTab();
 
-                @baseIgnore.InitEdge();
-                @webIgnore = @baseIgnore.GetEdge();
-            }
-            catch (Exception)
-            {}
+                try
+                {
+                    @base.InitEdge();
+                    @web = @base.GetEdge();
+
+                    @baseIgnore.InitEdge();
+                    @webIgnore = @baseIgnore.GetEdge();
+                }
+                catch (Exception)
+                { }
+            }    
         }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
             try
             {
-                IsClose = true;
-                @web.Close();
-                @webIgnore.Close();
                 Environment.Exit(0);
             }
             catch (Exception)
@@ -607,6 +616,22 @@ namespace ABytepay
             timer.Start();
         }
 
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                IsClose = true;
+                @web?.Quit();
+                @webIgnore?.Quit();
+                @web = @webIgnore = null;
+                _login.Close();
+               
+            }
+            catch (Exception)
+            {
+            }
+        }
+
         bool CheckForInternetConnection(int timeoutMs = 10000, string url = null)
         {
             try
@@ -629,16 +654,18 @@ namespace ABytepay
         {
             try
             {
-                for (int i = 0; i < web.WindowHandles.Count; i++)
+                int lweb = (int)(web?.WindowHandles.Count);
+                for (int i = 0; i < lweb; i++)
                 {
-                    web = web.SwitchTo().Window(web.WindowHandles[i]);
-                    web.Close();
+                    web = web?.SwitchTo().Window(web?.WindowHandles[i]);
+                    web?.Close();
                 }
 
-                for (int i = 0; i < webIgnore.WindowHandles.Count; i++)
+                int lwebignore = (int)(webIgnore?.WindowHandles.Count);
+                for (int i = 0; i < lwebignore; i++)
                 {
-                    webIgnore = webIgnore.SwitchTo().Window(webIgnore.WindowHandles[i]);
-                    webIgnore.Close();
+                    webIgnore = webIgnore?.SwitchTo().Window(webIgnore?.WindowHandles[i]);
+                    webIgnore?.Close();
                 }
             }
             catch (Exception) { }
