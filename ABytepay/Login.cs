@@ -102,7 +102,7 @@ namespace ABytepay
                                 await _firebase._firebaseDatabase.Child("Users").PostAsync(u);
                             }
                         }
-                        else if (mdevice != user.Object.ComputerId)
+                        else if (user.Object.ComputerId != null && mdevice != user.Object.ComputerId)
                             System.Windows.Forms.MessageBox.Show("Email is use in another machine", "Error");
                         //else if(user.Object.Email != null && user.Object.Email != tbEmail.Text)
                         //    System.Windows.Forms.MessageBox.Show("License key is use in another email", "Error");
