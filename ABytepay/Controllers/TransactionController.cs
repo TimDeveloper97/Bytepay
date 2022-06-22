@@ -14,14 +14,14 @@ namespace ABytepay.Controllers
     public class TransactionController
     {
         IWebDriver _web;
-        List<Product> _products;
+        Product _product;
         Receiver _receiver;
         bool _isIgnore;
 
-        public TransactionController(IWebDriver web, List<Product> products, Receiver receiver, bool isIgnore)
+        public TransactionController(IWebDriver web, Product product, Receiver receiver, bool isIgnore)
         {
             _web = web;
-            _products = products;
+            _product = product;
             _receiver = receiver;
             _isIgnore = isIgnore;
         }
@@ -38,6 +38,9 @@ namespace ABytepay.Controllers
         {
             try
             {
+                var body = _web.FindElement(By.CssSelector("body"));
+                body.SendKeys(Keys.PageUp);
+
                 var menu = _web.FindElement(By.XPath("//button[@class='sc-fotPbf cVjBTV']"));
                 if (menu != null)
                     menu.Click();
@@ -105,33 +108,23 @@ namespace ABytepay.Controllers
         {
             try
             {
-                for (int i = 0; i < _products.Count; i++)
-                {
-                    string xpath = "";
-                    if (i == 0)
-                        xpath = "//*[@id='form_total']/div[1]/div/div[2]/div/div[2]/div/table/tbody/tr/td/div";
-                    else
-                        xpath = $"//*[@id='form_total']/div[1]/div/div[2]/div/div[2]/div/table/tbody/tr[{i + 1}]/td/div";
+                // add product
+                int p = 0;
+                if (!string.IsNullOrEmpty(_product.Name1))
+                    AddProduct(p++, _product.Name1);
 
-                    var add = _web.FindElement(By.XPath(xpath));
-                    add.Click();
+                if (!string.IsNullOrEmpty(_product.Name2))
+                    AddProduct(p++, _product.Name2);
 
-                    var items = _web.FindElements(By.XPath("//input[@aria-autocomplete='list']"));
-                    items[items.Count - 1].SendKeys(_products[i].Name);
+                // add amount
+                p = 0;
+                if (!string.IsNullOrEmpty(_product.Name1))
+                    AddAmount(p++, _product.Amount1);
 
-                    _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(1000);
-                    Thread.Sleep(1000);
+                if (!string.IsNullOrEmpty(_product.Name2))
+                    AddAmount(p++, _product.Amount2);
 
-                    items[items.Count - 1].SendKeys(Keys.Tab);
-                }
-
-                for (int i = 0; i < _products.Count; i++)
-                {
-                    var number = _web.FindElement(By.XPath($"//input[@type='number'][@name='products[{i}].quantity']"));
-                    number.Clear();
-                    number.SendKeys(_products[i].Amount);
-                }
-
+                //click create link
                 var body = _web.FindElement(By.CssSelector("body"));
                 body.SendKeys(Keys.PageDown);
 
@@ -146,6 +139,36 @@ namespace ABytepay.Controllers
                 System.Windows.Forms.MessageBox.Show(tab + " Can't add items in cart", "Error");
                 Main.IsError = true;
             }
+        }
+
+        void AddProduct(int position, string name)
+        {
+            string xpath;
+            if (position == 0)
+                xpath = "//*[@id='form_total']/div[1]/div/div[2]/div/div[2]/div/table/tbody/tr/td/div";
+            else
+                xpath = $"//*[@id='form_total']/div[1]/div/div[2]/div/div[2]/div/table/tbody/tr[{position + 1}]/td/div";
+
+            var add = _web.FindElement(By.XPath(xpath));
+            add.Click();
+
+            // add product
+            var items = _web.FindElements(By.XPath("//input[@aria-autocomplete='list']"));
+            items[items.Count - 1].SendKeys(name);
+
+            Thread.Sleep(1500);
+
+            //new Actions(_web).SendKeys(Keys.Tab); 
+            items[items.Count - 1].SendKeys(Keys.Tab);
+        }
+
+        void AddAmount(int position, string amount)
+        {
+
+            // add amount
+            var number = _web.FindElement(By.XPath($"//input[@type='number'][@name='products[{position}].quantity']"));
+            number.Clear();
+            number.SendKeys(amount);
         }
 
         void GetLink()

@@ -22,18 +22,19 @@ namespace ABytepay
 {
     public partial class Main : Form
     {
+        public static bool IsStart = false;
+        public static bool IsClose = false;
+        public static bool IsVip = false;
+        public static bool IsError = false;
+
+        static FirebaseObject<User> _user;
+        static bool IsInternet = true;
+        static int currentitem = 0;
+
         IBaseController @base, @baseIgnore;
         IWebDriver @web, @webIgnore;
         List<Product> @products;
-        public static bool IsStart = false;
-        static string _link = "";
-        static string _linkIgnore = "";
-        public static bool IsError = false;
-        static bool IsInternet = true;
         BaseFirebase _firebase;
-        static FirebaseObject<User> _user;
-        public static bool IsClose = false;
-        public static bool IsVip = false;
         Login _login;
 
         public Main(Login login)
@@ -58,6 +59,7 @@ namespace ABytepay
             IsInternet = true;
             IsError = false;
             IsStart = false;
+            currentitem = 0;
 
             if (rFirefox.Checked)
             {
@@ -81,12 +83,13 @@ namespace ABytepay
                 @webIgnore = @baseIgnore.GetEdge();
             }
 
-            nAmount.Value = 1;
+            nAmount1.Value = 1;
+            nAmount2.Value = 1;
             tbnRandom_Click(null, null);
             cbRepeat.Checked = true;
 
-            lvItems.Columns.Add("Name", 240);
-            lvItems.Columns.Add("Amount");
+            lvItems.Columns.Add("Item 1", 200);
+            lvItems.Columns.Add("Item 2", 200);
 
             UpdateStatusInternet();
             TimeoutKey();
@@ -122,11 +125,7 @@ namespace ABytepay
 
                 foreach (var item in @products)
                 {
-                    lvItems.Items.Add(new ListViewItem(new string[]
-                    {
-                    item.Name,
-                    item.Amount
-                    }));
+                    lvItems.Items.Add(new ListViewItem(ProductToString(item)));
                 }
 
                 var account = CRUDHelper.Deserialize();
@@ -151,22 +150,7 @@ namespace ABytepay
                 return;
             }
 
-            IsStart = true;
-            IsError = false;
-
-            //change state
-            if (IsStart)
-            {
-                btnAuto.Enabled = false;
-                btnStop.Enabled = true;
-            }
-            else
-            {
-                btnAuto.Enabled = false;
-                btnStop.Enabled = true;
-            }
-
-            if (!IsInternet) return;
+            StartAction();
 
             // Actions
             // Normal tab
@@ -174,8 +158,6 @@ namespace ABytepay
             {
                 try
                 {
-                    @web.FindElement(By.XPath("//*[@id='root']/div[1]/div[2]/div/div[2]/div/div/div/div/h2"), 15);
-
                     if (IsStart && !IsError)
                         LoginController(@web);
                     else { btnStop_Click(null, null); return; }
@@ -207,8 +189,6 @@ namespace ABytepay
             {
                 var threadIgnore = new System.Threading.Thread(() =>
                 {
-                    @webIgnore.FindElement(By.XPath("//*[@id='root']/div[1]/div[2]/div/div[2]/div/div/div/div/h2"), 15);
-
                     if (IsStart && !IsError)
                         LoginController(@webIgnore);
                     else { btnStop_Click(null, null); return; }
@@ -294,20 +274,14 @@ namespace ABytepay
                         tbPassword.Text, false).Execute();
         }
 
-        void PaymentController(IWebDriver w)
-        {
-            this.Invoke(new Action(() => _link = Clipboard.GetText()));
-            new PaymentController(
-                w,
-                _link,
-                IsVip == true ? 24 : 23, false).Execute();
-        }
-
         void TransactionController(IWebDriver w)
         {
+            if (currentitem >= @products.Count)
+                currentitem = 0;
+
             new TransactionController(
                         w,
-                        @products,
+                        @products[currentitem++],
                         new Receiver
                         {
                             Name = tbName.Text,
@@ -315,6 +289,16 @@ namespace ABytepay
                             Email = tbEmail.Text,
                             Phone = tbPhone.Text
                         }, false).Execute();
+        }
+
+        void PaymentController(IWebDriver w)
+        {
+            string link = "";
+            this.Invoke(new Action(() => link = Clipboard.GetText()));
+            new PaymentController(
+                w,
+                link,
+                IsVip == true ? 24 : 23, false).Execute();
         }
 
         #endregion
@@ -391,18 +375,29 @@ namespace ABytepay
         {
             try
             {
-                var item = tbItem.Text;
-                var amount = nAmount.Value;
-                if (amount > 0 && !string.IsNullOrEmpty(item))
+                var item1 = tbItem1.Text;
+                var amount1 = nAmount1.Value;
+                var item2 = tbItem2.Text;
+                var amount2 = nAmount2.Value;
+
+                if (amount1 > 0 && !string.IsNullOrEmpty(item1) 
+                    || amount2 > 0 && !string.IsNullOrEmpty(item2))
                 {
-                    lvItems.Items.Add(new ListViewItem(new string[] { item, amount.ToString() }));
-                    @products.Add(new Product { Name = item, Amount = amount.ToString() });
-                    tbItem.Text = "";
+                    var pro = new Product(item1, amount1.ToString(), item2, amount2.ToString());
+
+                    //ipdate view
+                    lvItems.Items.Add(new ListViewItem(
+                        ProductToString(pro)));
+                    @products.Add(pro);
+
+                    tbItem1.Text = ""; nAmount1.Value = 1;
+                    tbItem2.Text = ""; nAmount2.Value = 1;
 
                     if (_user.Object.Products == null)
                         _user.Object.Products = new List<Product>();
 
-                    _user.Object.Products.Add(new Product { Name = item, Amount = amount.ToString() });
+                    //update firebase
+                    _user.Object.Products.Add(pro);
                     await _firebase._firebaseDatabase.Child("Users").Child(_user.Key).PutAsync(_user.Object);
                 }
             }
@@ -592,12 +587,14 @@ namespace ABytepay
             catch (Exception) { }
         }
 
-        private void btnLoginNormal_Click(object sender, EventArgs e) => LoginController(@web);
+        private void btnLoginNormal_Click(object sender, EventArgs e) { StartAction(); LoginController(@web); }
 
-        private void btnTransactionNormal_Click(object sender, EventArgs e) => TransactionController(@web);
+        private void btnTransactionNormal_Click(object sender, EventArgs e) { StartAction(); TransactionController(@web); }
 
         private void btnPaymentNormal_Click(object sender, EventArgs e)
         {
+            StartAction();
+
             for (int i = @web.WindowHandles.Count - 1; i > 0; i--)
             {
                 @web = @web?.SwitchTo().Window(@web?.WindowHandles[i]);
@@ -607,12 +604,29 @@ namespace ABytepay
             PaymentController(@web);
         }
 
-        private void btnLoginIgnore_Click(object sender, EventArgs e) => LoginController(@webIgnore);
+        private void btnLoginIgnore_Click(object sender, EventArgs e) { StartAction(); LoginController(@webIgnore); }
 
-        private void btnTransactionIgnore_Click(object sender, EventArgs e) => TransactionController(@webIgnore);
+        private void btnTransactionIgnore_Click(object sender, EventArgs e) { StartAction(); TransactionController(@webIgnore); }
+
+        private void tbItem1_TextChanged(object sender, EventArgs e)
+        {
+            if(!string.IsNullOrEmpty(tbItem1.Text))
+            {
+                tbItem2.Enabled = true;
+                nAmount2.Enabled = true;
+            }
+            else
+            {
+                tbItem2.Enabled = false;
+                nAmount2.Enabled = false;
+            } 
+                
+        }
 
         private void btnPaymentIgnore_Click(object sender, EventArgs e)
         {
+            StartAction();
+
             for (int i = webIgnore.WindowHandles.Count - 1; i > 0; i--)
             {
                 webIgnore = webIgnore?.SwitchTo().Window(webIgnore?.WindowHandles[i]);
@@ -620,6 +634,35 @@ namespace ABytepay
             }
 
             PaymentController(@webIgnore);
+        }
+
+        string[] ProductToString(Product product)
+        {
+            return new string[] 
+            { 
+                $"{product.Name1} [{product.Amount1}]", 
+                $"{product.Name2} [{(string.IsNullOrEmpty(product.Name2) ? "" : product.Amount2)}]" 
+            };
+        }
+
+        void StartAction()
+        {
+            IsStart = true;
+            IsError = false;
+
+            //change state
+            if (IsStart)
+            {
+                btnAuto.Enabled = false;
+                btnStop.Enabled = true;
+            }
+            else
+            {
+                btnAuto.Enabled = false;
+                btnStop.Enabled = true;
+            }
+
+            if (!IsInternet) return;
         }
         #endregion
 

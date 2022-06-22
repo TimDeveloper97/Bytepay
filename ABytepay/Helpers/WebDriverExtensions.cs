@@ -30,10 +30,10 @@ namespace ABytepay.Helpers
         {
             try
             {
-                return driver.FindElement(searchElementBy).Displayed;
-
+                var isDisplayed = driver.FindElement(searchElementBy).Displayed;
+                return isDisplayed;
             }
-            catch (NoSuchElementException)
+            catch (Exception)
             {
                 return false;
             }

@@ -33,7 +33,7 @@ namespace ABytepay.Controllers
             {
                 _web.Url = _url;
 
-                _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(500);
+                _web.FindElement(By.XPath("//*[@id='root']/div[1]/div[2]/div/div[2]/div/div/div/div/h2"), 15);
 
                 var email = _web.FindElement(By.Name("email"));
                 email.Clear();
