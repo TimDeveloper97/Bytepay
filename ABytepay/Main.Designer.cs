@@ -70,6 +70,7 @@ namespace ABytepay
             this.btnPaymentNormal = new System.Windows.Forms.Button();
             this.btnTransactionNormal = new System.Windows.Forms.Button();
             this.btnLoginNormal = new System.Windows.Forms.Button();
+            this.cbVip = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -338,6 +339,7 @@ namespace ABytepay
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.cbVip);
             this.groupBox6.Controls.Add(this.btnStop);
             this.groupBox6.Controls.Add(this.cbRepeat);
             this.groupBox6.Controls.Add(this.btnAuto);
@@ -362,11 +364,13 @@ namespace ABytepay
             // cbRepeat
             // 
             this.cbRepeat.AutoSize = true;
-            this.cbRepeat.Location = new System.Drawing.Point(21, 28);
+            this.cbRepeat.Checked = true;
+            this.cbRepeat.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbRepeat.Location = new System.Drawing.Point(9, 28);
             this.cbRepeat.Name = "cbRepeat";
-            this.cbRepeat.Size = new System.Drawing.Size(92, 17);
+            this.cbRepeat.Size = new System.Drawing.Size(70, 17);
             this.cbRepeat.TabIndex = 8;
-            this.cbRepeat.Text = "Incognito Tab";
+            this.cbRepeat.Text = "Incognito";
             this.cbRepeat.UseVisualStyleBackColor = true;
             // 
             // btnAuto
@@ -495,6 +499,19 @@ namespace ABytepay
             this.btnLoginNormal.UseVisualStyleBackColor = true;
             this.btnLoginNormal.Click += new System.EventHandler(this.btnLoginNormal_Click);
             // 
+            // cbVip
+            // 
+            this.cbVip.AutoSize = true;
+            this.cbVip.Checked = true;
+            this.cbVip.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbVip.Location = new System.Drawing.Point(85, 28);
+            this.cbVip.Name = "cbVip";
+            this.cbVip.Size = new System.Drawing.Size(41, 17);
+            this.cbVip.TabIndex = 9;
+            this.cbVip.Text = "Vip";
+            this.cbVip.UseVisualStyleBackColor = true;
+            this.cbVip.CheckedChanged += new System.EventHandler(this.cbVip_CheckedChanged);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -576,6 +593,7 @@ namespace ABytepay
         private System.Windows.Forms.Button btnPaymentNormal;
         private System.Windows.Forms.Button btnTransactionNormal;
         private System.Windows.Forms.Button btnLoginNormal;
+        private System.Windows.Forms.CheckBox cbVip;
     }
 }
 

@@ -33,12 +33,13 @@ namespace ABytepay
         BaseFirebase _firebase;
         static FirebaseObject<User> _user;
         public static bool IsClose = false;
+        public static bool IsVip = false;
         Login _login;
 
         public Main(Login login)
         {
             InitializeComponent();
-            
+
             _login = login;
             Init();
         }
@@ -52,6 +53,7 @@ namespace ABytepay
             @baseIgnore = new BaseIgnoreController();
             @products = new List<Product>();
 
+            IsVip = false;
             IsClose = false;
             IsInternet = true;
             IsError = false;
@@ -151,6 +153,7 @@ namespace ABytepay
 
             IsStart = true;
             IsError = false;
+
             //change state
             if (IsStart)
             {
@@ -174,43 +177,20 @@ namespace ABytepay
                     @web.FindElement(By.XPath("//*[@id='root']/div[1]/div[2]/div/div[2]/div/div/div/div/h2"), 15);
 
                     if (IsStart && !IsError)
-                    {
-                        new LoginController(
-                        @web,
-                        "https://bytepay.vn/login",
-                        tbUsername.Text,
-                        tbPassword.Text, false).Execute();
-                    }
+                        LoginController(@web);
                     else { btnStop_Click(null, null); return; }
 
                     @web.FindElement(By.XPath("//*[@id='root']/div[1]/header/div[2]/div[1]/div[1]"), 15);
                     @web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
 
                     if (IsStart && !IsError)
-                    {
-                        new TransactionController(
-                        @web,
-                        @products,
-                        new Receiver
-                        {
-                            Name = tbName.Text,
-                            Address = tbAddress.Text,
-                            Email = tbEmail.Text,
-                            Phone = tbPhone.Text
-                        }, false).Execute();
-                    }
+                        TransactionController(@web);
                     else { btnStop_Click(null, null); return; }
 
                     @web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
 
                     if (IsStart && !IsError)
-                    {
-                        this.Invoke(new Action(() => _link = Clipboard.GetText()));
-                        new PaymentController(
-                            @web,
-                            _link,
-                            23, false).Execute();
-                    }
+                        PaymentController(@web);
                     else { btnStop_Click(null, null); return; }
                 }
                 catch (Exception)
@@ -230,54 +210,31 @@ namespace ABytepay
                     @webIgnore.FindElement(By.XPath("//*[@id='root']/div[1]/div[2]/div/div[2]/div/div/div/div/h2"), 15);
 
                     if (IsStart && !IsError)
-                    {
-                        new LoginController(
-                        @webIgnore,
-                        "https://bytepay.vn/login",
-                        tbUsername.Text,
-                        tbPassword.Text, true).Execute();
-                    }
+                        LoginController(@webIgnore);
                     else { btnStop_Click(null, null); return; }
 
                     @webIgnore.FindElement(By.XPath("//*[@id='root']/div[1]/header/div[2]/div[1]/div[1]"), 15);
                     @webIgnore.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
 
                     if (IsStart && !IsError)
-                    {
-                        new TransactionController(
-                        @webIgnore,
-                        @products,
-                        new Receiver
-                        {
-                            Name = tbName.Text,
-                            Address = tbAddress.Text,
-                            Email = tbEmail.Text,
-                            Phone = tbPhone.Text
-                        }, true).Execute();
-                    }
+                        TransactionController(@webIgnore);
                     else { btnStop_Click(null, null); return; }
 
                     @webIgnore.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
 
                     if (IsStart && !IsError)
-                    {
-                        this.Invoke(new Action(() => _linkIgnore = Clipboard.GetText()));
-                        new PaymentController(
-                            @webIgnore,
-                            _linkIgnore,
-                            23, true).Execute();
-                    }
-
+                        PaymentController(@webIgnore);
+                    else { btnStop_Click(null, null); return; }
                     //btnStop_Click(null, null);
 
                 });
                 threadIgnore.IsBackground = true;
                 threadIgnore.Start();
             }
-            else
-            {
-                //btnStop_Click(null, null);
-            }
+            //else
+            //{
+            //    //btnStop_Click(null, null);
+            //}
 
             CRUDHelper.Serialize(new Account { Email = Login.Email, Key = Login.Key, Password = tbPassword.Text, Username = tbUsername.Text });
         }
@@ -328,19 +285,28 @@ namespace ABytepay
             }
         }
 
-        private void btnLoginNormal_Click(object sender, EventArgs e)
+        void LoginController(IWebDriver w)
         {
             new LoginController(
-                        @web,
+                        w,
                         "https://bytepay.vn/login",
                         tbUsername.Text,
                         tbPassword.Text, false).Execute();
         }
 
-        private void btnTransactionNormal_Click(object sender, EventArgs e)
+        void PaymentController(IWebDriver w)
+        {
+            this.Invoke(new Action(() => _link = Clipboard.GetText()));
+            new PaymentController(
+                w,
+                _link,
+                IsVip == true ? 24 : 23, false).Execute();
+        }
+
+        void TransactionController(IWebDriver w)
         {
             new TransactionController(
-                        @web,
+                        w,
                         @products,
                         new Receiver
                         {
@@ -351,64 +317,12 @@ namespace ABytepay
                         }, false).Execute();
         }
 
-        private void btnPaymentNormal_Click(object sender, EventArgs e)
-        {
-            for (int i = @web.WindowHandles.Count - 1; i > 0; i--)
-            {
-                @web = @web?.SwitchTo().Window(@web?.WindowHandles[i]);
-                @web.Close();
-            }
-
-            this.Invoke(new Action(() => _link = Clipboard.GetText()));
-            new PaymentController(
-                @web,
-                _link,
-                23, false).Execute();
-        }
-
-        private void btnLoginIgnore_Click(object sender, EventArgs e)
-        {
-            new LoginController(
-                       @webIgnore,
-                       "https://bytepay.vn/login",
-                       tbUsername.Text,
-                       tbPassword.Text, true).Execute();
-        }
-
-        private void btnTransactionIgnore_Click(object sender, EventArgs e)
-        {
-            new TransactionController(
-                        @webIgnore,
-                        @products,
-                        new Receiver
-                        {
-                            Name = tbName.Text,
-                            Address = tbAddress.Text,
-                            Email = tbEmail.Text,
-                            Phone = tbPhone.Text
-                        }, true).Execute();
-        }
-
-        private void btnPaymentIgnore_Click(object sender, EventArgs e)
-        {
-            for (int i = webIgnore.WindowHandles.Count - 1; i > 0; i--)
-            {
-                webIgnore = webIgnore?.SwitchTo().Window(webIgnore?.WindowHandles[i]);
-                webIgnore.Close();
-            }
-            this.Invoke(new Action(() => _linkIgnore = Clipboard.GetText()));
-            new PaymentController(
-                @webIgnore,
-                _linkIgnore,
-                23, true).Execute();
-
-        }
         #endregion
 
         #region =================== Event & Method =====================
         private void rChrome_CheckedChanged(object sender, EventArgs e)
         {
-            if(rChrome.Checked == true)
+            if (rChrome.Checked == true)
             {
                 CloseTab();
 
@@ -421,12 +335,12 @@ namespace ABytepay
                     @webIgnore = @baseIgnore.GetChrome();
                 }
                 catch (Exception) { }
-            }    
+            }
         }
 
         private void rFirefox_CheckedChanged(object sender, EventArgs e)
         {
-            if(rFirefox.Checked == true)
+            if (rFirefox.Checked == true)
             {
                 CloseTab();
 
@@ -440,12 +354,12 @@ namespace ABytepay
                 }
                 catch (Exception)
                 { }
-            }    
+            }
         }
 
         private void rEdge_CheckedChanged(object sender, EventArgs e)
         {
-            if(rEdge.Checked == true)
+            if (rEdge.Checked == true)
             {
                 CloseTab();
 
@@ -459,7 +373,7 @@ namespace ABytepay
                 }
                 catch (Exception)
                 { }
-            }    
+            }
         }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
@@ -579,7 +493,7 @@ namespace ABytepay
                 var key = (await _firebase._firebaseDatabase.Child("Keys").OnceAsync<LicenseKey>())
                     .FirstOrDefault(x => x.Object.Key == Login.Key);
 
-                if(IsClose)
+                if (IsClose)
                 {
                     this.Invoke(new Action(() =>
                     {
@@ -589,7 +503,7 @@ namespace ABytepay
                             this.Close();
                         }
                         catch (Exception)
-                        {}
+                        { }
                     }));
                 }
 
@@ -625,11 +539,18 @@ namespace ABytepay
                 @webIgnore?.Quit();
                 @web = @webIgnore = null;
                 _login.Close();
-               
+
             }
             catch (Exception)
             {
             }
+        }
+
+        private void cbVip_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbVip.CheckState == CheckState.Checked)
+                IsVip = true;
+            else IsVip = false;
         }
 
         bool CheckForInternetConnection(int timeoutMs = 10000, string url = null)
@@ -669,6 +590,36 @@ namespace ABytepay
                 }
             }
             catch (Exception) { }
+        }
+
+        private void btnLoginNormal_Click(object sender, EventArgs e) => LoginController(@web);
+
+        private void btnTransactionNormal_Click(object sender, EventArgs e) => TransactionController(@web);
+
+        private void btnPaymentNormal_Click(object sender, EventArgs e)
+        {
+            for (int i = @web.WindowHandles.Count - 1; i > 0; i--)
+            {
+                @web = @web?.SwitchTo().Window(@web?.WindowHandles[i]);
+                @web.Close();
+            }
+
+            PaymentController(@web);
+        }
+
+        private void btnLoginIgnore_Click(object sender, EventArgs e) => LoginController(@webIgnore);
+
+        private void btnTransactionIgnore_Click(object sender, EventArgs e) => TransactionController(@webIgnore);
+
+        private void btnPaymentIgnore_Click(object sender, EventArgs e)
+        {
+            for (int i = webIgnore.WindowHandles.Count - 1; i > 0; i--)
+            {
+                webIgnore = webIgnore?.SwitchTo().Window(webIgnore?.WindowHandles[i]);
+                webIgnore.Close();
+            }
+
+            PaymentController(@webIgnore);
         }
         #endregion
 
