@@ -17,6 +17,7 @@ namespace ABytepay.Controllers
         Product _product;
         Receiver _receiver;
         bool _isIgnore;
+        static Mutex _mutex = new Mutex();
 
         public TransactionController(IWebDriver web, Product product, Receiver receiver, bool isIgnore)
         {
@@ -38,6 +39,8 @@ namespace ABytepay.Controllers
         {
             try
             {
+                _web.FindElement(By.ClassName("logo"), 15);
+
                 var body = _web.FindElement(By.CssSelector("body"));
                 body.SendKeys(Keys.PageUp);
 
@@ -156,7 +159,8 @@ namespace ABytepay.Controllers
             var items = _web.FindElements(By.XPath("//input[@aria-autocomplete='list']"));
             items[items.Count - 1].SendKeys(name);
 
-            Thread.Sleep(1500);
+            _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
+            Thread.Sleep(2000);
 
             //new Actions(_web).SendKeys(Keys.Tab); 
             items[items.Count - 1].SendKeys(Keys.Tab);
@@ -175,20 +179,23 @@ namespace ABytepay.Controllers
         {
             try
             {
+                _mutex.WaitOne();
                 _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(500);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
 
                 //wait
                 _web.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div/p"), 15);
 
-                if (_isIgnore)
-                {
-                    _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
-                    Thread.Sleep(2000);
-                }
+                //if (_isIgnore)
+                //{
+                //    _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
+                //    Thread.Sleep(2000);
+                //}
 
                 var link = _web.FindElement(By.XPath("/html/body/div[2]/div/div[2]/div/p"));
                 link.Click();
+
+                _mutex.ReleaseMutex();
             }
             catch (Exception)
             {

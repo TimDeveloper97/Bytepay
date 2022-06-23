@@ -28,6 +28,7 @@ namespace ABytepay.Domain
                 service.HideCommandPromptWindow = true;
 
                 _edgeDriver = new EdgeDriver(service);
+                _edgeDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
 
             }
             catch (Exception ex)
@@ -44,7 +45,7 @@ namespace ABytepay.Domain
                 service.HideCommandPromptWindow = true;
 
                 _firefoxDriver = new FirefoxDriver(service);
-
+                _firefoxDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
             }
             catch (Exception ex)
             {
@@ -61,7 +62,7 @@ namespace ABytepay.Domain
                 service.HideCommandPromptWindow = true;
 
                 _chromeDriver = new ChromeDriver(service);
-
+                _chromeDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
             }
             catch (Exception ex)
             {

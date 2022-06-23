@@ -32,7 +32,6 @@ namespace ABytepay.Controllers
             try
             {
                 _web.Url = _url;
-
                 _web.FindElement(By.XPath("//*[@id='root']/div[1]/div[2]/div/div[2]/div/div/div/div/h2"), 15);
 
                 var email = _web.FindElement(By.Name("email"));
@@ -43,18 +42,13 @@ namespace ABytepay.Controllers
                 password.Clear();
                 password.SendKeys(_password);
 
-                _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(500);
-                Thread.Sleep(500);
+                
                 var login = _web.FindElement(By.XPath("//button[@type='submit'][text()='Đăng nhập']"));
 
-                login.Click();
-                while (true)
-                {
-                    Thread.Sleep(500);
-                    if (_web.FindElement(By.XPath("//*[@id='root']/div[1]/header/div[2]/div[1]/div[1]"), 10))
-                        break;
-                }
+                _web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(1500);
+                Thread.Sleep(1500);
 
+                login.Click();
             }
             catch (Exception)
             {

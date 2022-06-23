@@ -431,13 +431,15 @@ namespace ABytepay
         {
             try
             {
-                @products.RemoveAt(lvItems.SelectedItems[0].Index);
-                lvItems.Items.RemoveAt(lvItems.SelectedItems[0].Index);
-
-                _user.Object.Products.RemoveAt(lvItems.SelectedItems[0].Index);
+                int index = lvItems.SelectedItems[0].Index;
+                
+                _user.Object.Products.RemoveAt(index);
                 await _firebase._firebaseDatabase.Child("Users").Child(_user.Key).PutAsync(_user.Object);
+
+                @products.RemoveAt(index);
+                lvItems.Items.RemoveAt(index);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
             }
         }

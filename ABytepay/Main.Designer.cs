@@ -150,12 +150,10 @@ namespace ABytepay
             // rEdge
             // 
             this.rEdge.AutoSize = true;
-            this.rEdge.Checked = true;
             this.rEdge.Location = new System.Drawing.Point(138, 19);
             this.rEdge.Name = "rEdge";
             this.rEdge.Size = new System.Drawing.Size(50, 17);
             this.rEdge.TabIndex = 2;
-            this.rEdge.TabStop = true;
             this.rEdge.Text = "Edge";
             this.rEdge.UseVisualStyleBackColor = true;
             this.rEdge.CheckedChanged += new System.EventHandler(this.rEdge_CheckedChanged);
@@ -174,10 +172,12 @@ namespace ABytepay
             // rChrome
             // 
             this.rChrome.AutoSize = true;
+            this.rChrome.Checked = true;
             this.rChrome.Location = new System.Drawing.Point(9, 19);
             this.rChrome.Name = "rChrome";
             this.rChrome.Size = new System.Drawing.Size(61, 17);
             this.rChrome.TabIndex = 0;
+            this.rChrome.TabStop = true;
             this.rChrome.Text = "Chrome";
             this.rChrome.UseVisualStyleBackColor = true;
             this.rChrome.CheckedChanged += new System.EventHandler(this.rChrome_CheckedChanged);
