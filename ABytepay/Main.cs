@@ -150,6 +150,10 @@ namespace ABytepay
                 return;
             }
 
+            // write data
+            CRUDHelper.Serialize(new Account { Email = Login.Email, Key = Login.Key, Password = tbPassword.Text, Username = tbUsername.Text });
+
+            // update button state
             StartAction();
 
             // Actions
@@ -158,27 +162,36 @@ namespace ABytepay
             {
                 try
                 {
-                    if (IsStart && !IsError)
-                        LoginController(@web);
-                    else { btnStop_Click(null, null); return; }
+                    while (true)
+                    {
+                        if (IsStart && !IsError)
+                            LoginController(@web);
+                        else { btnStop_Click(null, null); return; }
 
-                    @web.FindElement(By.XPath("//*[@id='root']/div[1]/header/div[2]/div[1]/div[1]"), 15);
-                    @web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
+                        @web.FindElement(By.XPath("//*[@id='root']/div[1]/header/div[2]/div[1]/div[1]"), 15);
+                        @web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
 
-                    if (IsStart && !IsError)
-                        TransactionController(@web);
-                    else { btnStop_Click(null, null); return; }
+                        if (IsStart && !IsError)
+                            TransactionController(@web);
+                        else { btnStop_Click(null, null); return; }
 
-                    @web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
+                        @web.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
 
-                    if (IsStart && !IsError)
-                        PaymentController(@web);
-                    else { btnStop_Click(null, null); return; }
+                        if (IsStart && !IsError)
+                            PaymentController(@web);
+                        else { btnStop_Click(null, null); return; }
+
+                        for (int i = @web.WindowHandles.Count - 1; i > 0; i--)
+                        {
+                            @web = @web?.SwitchTo().Window(@web?.WindowHandles[i]);
+                            @web.Close();
+                        }
+
+                        @web = @web?.SwitchTo().Window(@web?.WindowHandles.First());
+                    }
                 }
                 catch (Exception)
-                {
-
-                }
+                {}
 
             });
             thread.IsBackground = true;
@@ -189,34 +202,42 @@ namespace ABytepay
             {
                 var threadIgnore = new System.Threading.Thread(() =>
                 {
-                    if (IsStart && !IsError)
-                        LoginController(@webIgnore);
-                    else { btnStop_Click(null, null); return; }
+                    try
+                    {
+                        while (true)
+                        {
+                            if (IsStart && !IsError)
+                                LoginController(@webIgnore);
+                            else { btnStop_Click(null, null); return; }
 
-                    @webIgnore.FindElement(By.XPath("//*[@id='root']/div[1]/header/div[2]/div[1]/div[1]"), 15);
-                    @webIgnore.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
+                            @webIgnore.FindElement(By.XPath("//*[@id='root']/div[1]/header/div[2]/div[1]/div[1]"), 15);
+                            @webIgnore.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
 
-                    if (IsStart && !IsError)
-                        TransactionController(@webIgnore);
-                    else { btnStop_Click(null, null); return; }
+                            if (IsStart && !IsError)
+                                TransactionController(@webIgnore);
+                            else { btnStop_Click(null, null); return; }
 
-                    @webIgnore.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
+                            @webIgnore.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(2000);
 
-                    if (IsStart && !IsError)
-                        PaymentController(@webIgnore);
-                    else { btnStop_Click(null, null); return; }
-                    //btnStop_Click(null, null);
+                            if (IsStart && !IsError)
+                                PaymentController(@webIgnore);
+                            else { btnStop_Click(null, null); return; }
 
+                            for (int i = webIgnore.WindowHandles.Count - 1; i > 0; i--)
+                            {
+                                webIgnore = webIgnore?.SwitchTo().Window(webIgnore?.WindowHandles[i]);
+                                webIgnore.Close();
+                            }
+                            webIgnore = webIgnore?.SwitchTo().Window(webIgnore?.WindowHandles.First());
+                        }
+                    }
+                    catch (Exception)
+                    {}
                 });
+
                 threadIgnore.IsBackground = true;
                 threadIgnore.Start();
             }
-            //else
-            //{
-            //    //btnStop_Click(null, null);
-            //}
-
-            CRUDHelper.Serialize(new Account { Email = Login.Email, Key = Login.Key, Password = tbPassword.Text, Username = tbUsername.Text });
         }
 
         public void btnStop_Click(object sender, EventArgs e)
@@ -485,42 +506,49 @@ namespace ABytepay
 
             timer.Tick += async (s, e) =>
             {
-                var key = (await _firebase._firebaseDatabase.Child("Keys").OnceAsync<LicenseKey>())
+                try
+                {
+                    if (!IsInternet) return;
+
+                    var key = (await _firebase._firebaseDatabase.Child("Keys").OnceAsync<LicenseKey>())
                     .FirstOrDefault(x => x.Object.Key == Login.Key);
 
-                if (IsClose)
-                {
-                    this.Invoke(new Action(() =>
+                    if (IsClose)
                     {
-                        try
+                        this.Invoke(new Action(() =>
+                        {
+                            try
+                            {
+                                timer.Stop();
+                                this.Close();
+                            }
+                            catch (Exception)
+                            { }
+                        }));
+                    }
+
+
+                    if (key == null)
+                    {
+                        System.Windows.Forms.MessageBox.Show("License key doesn't exist", "Error");
+                        this.Invoke(new Action(() =>
                         {
                             timer.Stop();
                             this.Close();
-                        }
-                        catch (Exception)
-                        { }
-                    }));
-                }
-
-
-                if (key == null)
-                {
-                    System.Windows.Forms.MessageBox.Show("License key doesn't exist", "Error");
-                    this.Invoke(new Action(() =>
+                        }));
+                    }
+                    else if (key.Object.End < DateTime.Now)
                     {
-                        timer.Stop();
-                        this.Close();
-                    }));
+                        System.Windows.Forms.MessageBox.Show("License key is out of date", "Error");
+                        this.Invoke(new Action(() =>
+                        {
+                            timer.Stop();
+                            this.Close();
+                        }));
+                    }
                 }
-                else if (key.Object.End < DateTime.Now)
-                {
-                    System.Windows.Forms.MessageBox.Show("License key is out of date", "Error");
-                    this.Invoke(new Action(() =>
-                    {
-                        timer.Stop();
-                        this.Close();
-                    }));
-                }
+                catch (Exception)
+                {}
             };
             timer.Start();
         }

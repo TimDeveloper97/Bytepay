@@ -126,8 +126,9 @@ namespace ABytepay.Controllers
 
         void Payment()
         {
-            //var notrobot = _web.FindElement(By.XPath("//*[@id='recaptcha-anchor']/div[1]"), 10);
-            //notrobot.Click();
+            var timeout = 21 * 60;
+            //_web.FindElement(By.XPath($"//*[@id='root']/div[1]/div/p"), timeout);
+            _web.FindElement(By.ClassName($"popup"), timeout);
         }
     }
 }

@@ -15,9 +15,15 @@ namespace LicenseKey
 
         static async Task Main(string[] args)
         {
-            _firebaseDatabase = new FirebaseClient(_realTimeData);
+            //_firebaseDatabase = new FirebaseClient(_realTimeData);
 
-            await AddKey();
+            //await AddKey();
+            int i = 0;
+            while (true)
+            {
+                if (i++ == 100)
+                    return;
+            }
         }
 
         static async Task AddKey()
